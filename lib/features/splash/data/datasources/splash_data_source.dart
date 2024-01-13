@@ -1,19 +1,17 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:flutter_achievments/core/common/entity/user_entity.dart';
+import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/error/exception.dart';
-import 'package:flutter_achievments/core/utils/typedefs.dart';
-import 'package:flutter_achievments/features/auth/domain/entities/child_entity.dart';
-import 'package:flutter_achievments/features/auth/domain/entities/parent_entity.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/parent_model.dart';
 
 abstract class SplashDataSource {
   const SplashDataSource();
   Stream<String?> authState();
-  Future<UserEntity> findUser(String? id);
+  Future<UserEntity> findUser(String id);
 }
 
 class SplashDataSourceImpl implements SplashDataSource {
@@ -31,13 +29,7 @@ class SplashDataSourceImpl implements SplashDataSource {
   }
 
   @override
-  Future<UserEntity> findUser(String? id) async {
-    if (id == null) {
-      throw const ApiException(
-          dialogTextCode: 'user_not_logged_in_text',
-          dialogTitleCode: 'user_not_logged_in',
-          statusCode: 401);
-    }
+  Future<UserEntity> findUser(String id) async {
     final user = await _firebaseFirestore.collection('users').doc(id).get();
     if (!user.exists) {
       throw const ApiException(
@@ -49,9 +41,9 @@ class SplashDataSourceImpl implements SplashDataSource {
     Map<String, dynamic> userData = user.data() as Map<String, dynamic>;
     // Determine the type of user and deserialize accordingly
     if (userData['userType'] == 'parent') {
-      return ParentEntity.fromMap(userData);
+      return ParentModel.fromMap(userData, id);
     } else if (userData['userType'] == 'child') {
-      return ChildEntity.fromMap(userData);
+      return ChildModel.fromMap(userData, id);
     } else {
       throw const ApiException(
           dialogTextCode: 'unknown_user_type_text',

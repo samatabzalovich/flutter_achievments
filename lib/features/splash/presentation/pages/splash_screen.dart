@@ -15,7 +15,6 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
     return const Scaffold(
-      
         body:  SplashBody());
   }
 }

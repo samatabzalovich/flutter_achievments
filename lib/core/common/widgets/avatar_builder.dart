@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/core/common/entity/avatar.dart';
+import 'package:flutter_achievments/core/enums/avatar_type.dart';
+import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'dart:math' as math;
 
@@ -56,7 +57,7 @@ class AvatarBuilder extends StatelessWidget {
     switch (avatar.type) {
       case AvatarType.asset:
         return Image.asset(
-          avatar.path,
+          avatar.photoUrl,
           fit: BoxFit.cover,
         );
       case AvatarType.network:
@@ -64,13 +65,13 @@ class AvatarBuilder extends StatelessWidget {
           return avatar.image!;
         } 
           return Image.network(
-            avatar.path,
+            avatar.photoUrl,
             fit: BoxFit.cover,
           );
         
       default:
         return Image.asset(
-          avatar.path,
+          avatar.photoUrl,
           fit: BoxFit.cover,
         );
     }

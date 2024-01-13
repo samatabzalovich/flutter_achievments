@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-
 class ApiException extends Equatable implements Exception {
   final String dialogTextCode;
   final String dialogTitleCode;

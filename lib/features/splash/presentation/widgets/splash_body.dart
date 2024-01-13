@@ -1,10 +1,21 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/enums/user_type.dart';
+import 'package:flutter_achievments/core/services/get_it.dart';
+import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
+import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
+import 'package:flutter_achievments/features/profile/presentation/pages/account_pref_page.dart';
+import 'package:flutter_achievments/features/profile/presentation/pages/child_profile_page.dart';
+import 'package:flutter_achievments/features/splash/presentation/bloc/auth_status.dart';
+import 'package:flutter_achievments/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:flutter_achievments/features/splash/presentation/widgets/app_icon.dart';
 import 'package:flutter_achievments/features/splash/presentation/widgets/form_section.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
+import 'package:provider/provider.dart';
 
 class SplashBody extends StatefulWidget {
   const SplashBody({super.key});
@@ -14,6 +25,9 @@ class SplashBody extends StatefulWidget {
 }
 
 class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
+  late final SplashBloc splashBloc;
+  late StreamSubscription<AuthStatus> splashSub;
+
   late AnimationController _initializeAnimationController;
   late AnimationController _splashAnimationController;
   late AnimationController _formAnimationController;
@@ -25,15 +39,18 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
   late Animation<double> _backgroundAnimation;
   late Animation<double> _formAnimation;
   late Animation<double> _opacityAnimation;
-
+  AuthStatus? _authStatus;
   @override
   void initState() {
     super.initState();
+    splashBloc = sl<SplashBloc>();
+
     _initializeAnimationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1500));
-    _backgroundOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-        parent: _initializeAnimationController,
-        curve: const Interval(0, 0.7, curve: Curves.decelerate)));
+    _backgroundOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(
+            parent: _initializeAnimationController,
+            curve: const Interval(0, 0.7, curve: Curves.decelerate)));
     _textOpacityAnimation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(
             parent: _initializeAnimationController,
@@ -64,14 +81,11 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
     _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
         parent: _formAnimationController, curve: Curves.decelerate));
 
-    _initializeAnimationController.addListener(() {
-      if (_initializeAnimationController.isCompleted) {
-        Timer(Duration(seconds: 1), () {
-          _splashAnimationController.forward();
-        });
-      }
-    });
-    _initializeAnimationController.forward();
+    // _initializeAnimationController.addListener(() {
+
+    // });
+    
+    listenToEvents();
   }
 
   @override
@@ -79,6 +93,7 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
     _initializeAnimationController.dispose();
     _splashAnimationController.dispose();
     _formAnimationController.dispose();
+    splashSub.cancel();
     super.dispose();
   }
 
@@ -162,5 +177,40 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
             );
           }),
     );
+  }
+
+  void listenToEvents() async {
+    await _initializeAnimationController.forward();
+    splashSub = splashBloc.authStatus.listen((event) {
+      if (event is AuthStatusLoggedOut) {
+        if (_initializeAnimationController.isCompleted) {
+            Timer(const Duration(milliseconds: 500), () {
+              _splashAnimationController.forward();
+            });
+        } else {
+          _authStatus = event;
+        }
+      } else if (event is AuthStatusLoggedIn) {
+        _navigateUserBasedOnType(event.userEntity!);
+      }
+    });
+  }
+
+  void _navigateUserBasedOnType(UserEntity user) {
+    Provider.of<UserProvider>(context, listen: false).setUser(user);
+    if (user.userType == UserType.parent) {
+      if(user.name == null) {
+        Navigator.of(context).pushNamed(AccountPrefPage.routeName);
+      } else {
+        Navigator.of(context).pushNamed(ParentHomePage.routeName);
+      }
+    } else {
+      if (user.name == null) {
+        Navigator.of(context).pushNamed(ChildProfilePage.routeName);
+      } else {
+        Navigator.of(context).pushNamed(ParentHomePage.routeName);
+      }
+    }
+
   }
 }

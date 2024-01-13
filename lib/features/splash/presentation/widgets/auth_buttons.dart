@@ -23,7 +23,7 @@ class AuthButtons extends StatelessWidget {
         MyElevatedButton(
             width: 256,
             onPressed: () {
-              // Navigator.pushNamed(context, TermsOfUsePage.routeName);
+              Navigator.pushNamed(context, TermsOfUsePage.routeName);
             },
             child: const CustomText('Регистрация ', fontSize: 16)),
       ],

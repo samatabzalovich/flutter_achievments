@@ -1,10 +1,7 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class  LocaleKeys {
-  static const error_locale_is_not_saved = 'error_locale_is_not_saved';
   static const error = 'error';
-  static const no_locale_found = 'no_locale_found';
-  static const locale_saved = 'locale_saved';
   static const empty = 'empty';
   static const name = 'name';
   static const son = 'son';
@@ -26,5 +23,56 @@ abstract class  LocaleKeys {
   static const child = 'child';
   static const parent = 'parent';
   static const questionMark = 'questionMark';
+  static const selectAvatar = 'selectAvatar';
+  static const kids_avatar = 'kids_avatar';
+  static const ifYouAreUnderThirteen = 'ifYouAreUnderThirteen';
+  static const contactYourParents = 'contactYourParents';
+  static const pleaseReadTerms = 'pleaseReadTerms';
+  static const thankYou = 'thankYou';
+  static const termsOfUse = 'termsOfUse';
+  static const privacyPolicy = 'privacyPolicy';
+  static const refuse = 'refuse';
+  static const accept = 'accept';
+  static const welcome = 'welcome';
+  static const letsMeet = 'letsMeet';
+  static const areYouAdultOrChild = 'areYouAdultOrChild';
+  static const adult = 'adult';
+  static const toProtectYourData = 'toProtectYourData';
+  static const email = 'email';
+  static const password = 'password';
+  static const register = 'register';
+  static const alreadyRegistered = 'alreadyRegistered';
+  static const continueWith = 'continueWith';
+  static const continueWithout = 'continueWithout';
+  static const guestDataIsNotProtected = 'guestDataIsNotProtected';
+  static const guestFirstTitle = 'guestFirstTitle';
+  static const guestSecondTitle = 'guestSecondTitle';
+  static const menu = 'menu';
+  static const profileSettings = 'profileSettings';
+  static const registration = 'registration';
+  static const typeYourInfo = 'typeYourInfo';
+  static const soThatFamilyRecognizesYou = 'soThatFamilyRecognizesYou';
+  static const yourNameAdult = 'yourNameAdult';
+  static const areYouMomOrDad = 'areYouMomOrDad';
+  static const displayAsMomOrDad = 'displayAsMomOrDad';
+  static const accountPrefsFirstTitle = 'accountPrefsFirstTitle';
+  static const accountPrefsSecondTitle = 'accountPrefsSecondTitle';
+  static const signInAppBarTitle = 'signInAppBarTitle';
+  static const byInviteCode = 'byInviteCode';
+  static const typeCodeManually = 'typeCodeManually';
+  static const scanQRCode = 'scanQRCode';
+  static const usingSignInForm = 'usingSignInForm';
+  static const sigIn = 'sigIn';
+  static const forgotPassword = 'forgotPassword';
+  static const throughSocialNetwork = 'throughSocialNetwork';
+  static const signInUsingCode = 'signInUsingCode';
+  static const enterCode = 'enterCode';
+  static const youCanGetCode = 'youCanGetCode';
+  static const codeLocation = 'codeLocation';
+  static const exit = 'exit';
+  static const goBack = 'goBack';
+  static const registerChild = 'registerChild';
+  static const registerChildButton = 'registerChildButton';
+  static const back = 'back';
 
 }

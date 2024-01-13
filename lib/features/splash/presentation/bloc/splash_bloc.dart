@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_achievments/core/common/entity/user_entity.dart';
+import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/services/get_it.dart';
 import 'package:flutter_achievments/core/usecase/usecase.dart';
 import 'package:flutter_achievments/features/splash/domain/usecases/auth_state.dart';
@@ -9,14 +9,11 @@ import 'package:rxdart/subjects.dart';
 
 class SplashBloc {
   final Stream<AuthStatus> authStatus;
-  final Stream<bool> isLoading;
   const SplashBloc._({
     required this.authStatus,
-    required this.isLoading,
   });
 
   factory SplashBloc(AuthStateUseCase authStateUseCase) {
-    final isLoading = BehaviorSubject<bool>();
     final authStatus = authStateUseCase().map((result) {
       final user = result.fold((l) => null, (r) => r);
       if (user == null) {
@@ -28,7 +25,6 @@ class SplashBloc {
     
     return SplashBloc._(
       authStatus: authStatus,
-      isLoading: isLoading,
     );
   }
 }

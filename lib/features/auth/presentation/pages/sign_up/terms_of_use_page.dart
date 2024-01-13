@@ -4,7 +4,7 @@ import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_navbar.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_button.dart';
-import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/choose_type_page.dart';
+import 'package:flutter_achievments/features/profile/presentation/pages/choose_type_page.dart';
 
 class TermsOfUsePage extends StatelessWidget {
   const TermsOfUsePage({super.key});

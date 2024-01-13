@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_achievments/core/common/entity/user_entity.dart';
+import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/error/exception.dart';
 import 'package:flutter_achievments/core/error/failure.dart';
 import 'package:flutter_achievments/core/utils/typedefs.dart';
@@ -15,8 +15,15 @@ class SplashRepoImpl implements SplashRepo {
   ResultStream<UserEntity> authState() {
     return _splashDataSource.authState().asyncMap((value) async {
       try {
+        if (value != null) {
           final user = await _splashDataSource.findUser(value);
           return Right(user);
+        } else {
+          throw const ApiException(
+              dialogTextCode: 'user_not_logged_in_text',
+              dialogTitleCode: 'user_not_logged_in',
+              statusCode: 401);
+        }
       } on ApiException catch (e) {
         return left(ApiFailure.fromException(e));
       }

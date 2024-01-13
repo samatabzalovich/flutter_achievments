@@ -55,5 +55,22 @@
    "areYouMomOrDad": "Are you a mom or a dad?",
    "displayAsMomOrDad": "Display as Dad/Mom",
    "accountPrefsFirtTitle": "If enabled, then for children in the app, you are displayed as 'Dad' or 'Mom'.",
-   "accountPrefsSecondTitle": "If disabled, then for children in the app, you are displayed under the name you have set."
+   "accountPrefsSecondTitle": "If disabled, then for children in the app, you are displayed under the name you have set.",
+   "signInAppBarTitle": "Вход",
+   "byInviteCode": "Через коду приглашения",
+   "typeCodeManually": "Ввести код вручную",
+   "scanQRCode": "Сканировать QR",
+   "usingSignInForm": "Через форму входа",
+   "sigIn": "Войти",
+   "forgotPassword": "Забыли пароль? Восстановить",
+   "throughSocialNetwork": "Через соц. сети",
+   "signInUsingCode": "Вход по коду",
+   "enterCode": "Введите код",
+   "youCanGetCode": "Код можно получить от другого члена семьи,зарегистрировавшегося в приложении.Чтобы отправить код зайдите в приложении",
+   "codeLocation": "Меню → Семья → (Создать нового участника или нажать по уже существующему) → Код приглашения",
+   "exit": "Выход",
+   "goBack": "Вернуться назад",
+   "registerChild": "Зарегистрировать ребёнка",
+   "registerChildButton": "Зарегистрировать",
+   "back": "Назад"
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/services.dart' show Uint8List;
-import 'package:flutter_achievments/core/common/entity/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:path_provider/path_provider.dart';
 class ImageUtils {
   Future<Image> loadImageIntoBytes(File image) async {

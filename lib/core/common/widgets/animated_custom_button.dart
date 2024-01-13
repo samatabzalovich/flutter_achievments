@@ -29,10 +29,10 @@ class _AnimatedCustomButtonState extends State<AnimatedCustomButton> {
     super.initState();
     _topGradient =
         ColorTween(begin: buttonDisabledGradient, end: greenButtonGradient)
-            .animate(widget.controller);
+            .animate(CurvedAnimation(parent: widget.controller, curve: Curves.decelerate));
     _bottomGradient =
         ColorTween(begin: buttonDisabledGradient2, end: greenButtonGradient2)
-            .animate(widget.controller);
+            .animate(CurvedAnimation(parent: widget.controller, curve: Curves.decelerate));
   }
 
   @override

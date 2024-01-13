@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SocialMedia extends StatelessWidget {
@@ -13,7 +14,7 @@ class SocialMedia extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const CustomText(
-          'Продолжить с помощью',
+          LocaleKeys.continueWith,
           color: greyColor,
           fontSize: 16,
         ),
@@ -38,13 +39,7 @@ class SocialMedia extends StatelessWidget {
             }),
           ],
         ),
-        const SizedBox(height: 8),
-        const CustomText(
-          'Есть вопросы? Свяжитесь с нами.',
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: socialMediaTextColor,
-        )
+        
       ],
     );
   }

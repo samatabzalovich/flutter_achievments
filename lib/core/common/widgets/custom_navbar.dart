@@ -5,10 +5,15 @@ import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 class CustomNavBar<T> extends StatelessWidget implements PreferredSizeWidget {
   const CustomNavBar(this.text, {
     super.key, 
-    this. data
+    this.data,
+    this.onBackTapped
   });
   final String text;
   final T? data;
+  final Function(dynamic data)? onBackTapped;
+  void _pop(BuildContext context) {
+              Navigator.pop(context, data);
+            }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,9 +33,7 @@ class CustomNavBar<T> extends StatelessWidget implements PreferredSizeWidget {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             icon: const Icon(Icons.arrow_back_ios, color: Colors.white,),
-            onPressed: () {
-              Navigator.pop(context, data);
-            },
+            onPressed: onBackTapped == null ?  () => _pop(context) :() => onBackTapped!(data),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
