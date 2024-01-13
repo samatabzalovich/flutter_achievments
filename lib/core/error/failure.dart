@@ -27,8 +27,8 @@ class ApiFailure extends Failure {
         );
   ApiFailure.fromException(ApiException exception)
       : this(
-          dialogText: exception.dialogText,
-          dialogTitle: exception.dialogTitle,
+          dialogText: exception.dialogTextCode,
+          dialogTitle: exception.dialogTitleCode,
           statusCode: exception.statusCode,
         );
 }
