@@ -17,6 +17,8 @@ import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sig
 import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/terms_of_use_page.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/choose_type_page.dart';
 import 'package:flutter_achievments/features/splash/presentation/pages/splash_screen.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/home/child_home_page.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'routes.dart';

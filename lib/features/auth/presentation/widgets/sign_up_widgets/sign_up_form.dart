@@ -10,7 +10,9 @@ import 'package:flutter_achievments/core/common/widgets/custom_text_field.dart';
 import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
 
 import 'package:flutter_achievments/features/auth/presentation/pages/login/login_page.dart';
+import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/terms_of_use_page.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/account_pref_page.dart';
+import 'package:flutter_achievments/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:provider/provider.dart';
 
@@ -136,7 +138,7 @@ class _SignUpFormState extends State<SignUpForm>
         TextButton(
             onPressed: () {
               Navigator.of(context).pushNamedAndRemoveUntil(
-                  LoginPage.routeName, (route) => false);
+                  LoginPage.routeName, (route) => route.isFirst);
             },
             child: const CustomText(
               LocaleKeys.alreadyRegistered,

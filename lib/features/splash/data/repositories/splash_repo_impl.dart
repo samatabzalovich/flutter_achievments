@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_achievments/core/common/extensions/type_cast.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/error/exception.dart';
 import 'package:flutter_achievments/core/error/failure.dart';
@@ -17,7 +18,14 @@ class SplashRepoImpl implements SplashRepo {
       try {
         if (value != null) {
           final user = await _splashDataSource.findUser(value);
-          return Right(user);
+          final UserEntity? userEntity = user.asUserEntity;
+          if(userEntity == null) {
+            throw const ApiException(
+              dialogTextCode: 'user_type_not_supported_text',
+              dialogTitleCode: 'user_type_not_supported',
+              statusCode: 401);
+          }
+          return Right(userEntity);
         } else {
           throw const ApiException(
               dialogTextCode: 'user_not_logged_in_text',

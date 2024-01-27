@@ -4,6 +4,8 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
   switch (settings.name) {
     case '/':
       return MyCustomRouteFadeTransition(route: const SplashScreen());
+
+    // Sign Up and Profile Routes
     case TermsOfUsePage.routeName:
       return MyCustomRouteSlideTransition(route: const TermsOfUsePage());
     case ChooseTypePage.routeName:
@@ -17,7 +19,11 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
         ),
       );
     case LoginPage.routeName:
-      return MyCustomRouteSlideTransition(route: const LoginPage());
+      return MyCustomRouteSlideTransition(
+          route: BlocProvider(
+        create: (context) => sl<AuthCubit>(),
+        child: const LoginPage(),
+      ));
     case AccountPrefPage.routeName:
       return MyCustomRouteFadeTransition(
           route: BlocProvider(
@@ -50,6 +56,16 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
         route: SignUpChildPage(
           childProfile: args,
         ),
+      );
+    
+    // Home Routes
+    case ParentHomePage.routeName:
+      return MyCustomRouteFadeTransition(
+        route: const ParentHomePage(),
+      );
+    case ChildHomePage.routeName:
+      return MyCustomRouteFadeTransition(
+        route: const ChildHomePage(),
       );
     default:
       return MyCustomRouteFadeTransition(route: const RouteNotFoundPage());

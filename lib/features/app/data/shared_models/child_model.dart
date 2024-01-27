@@ -2,46 +2,50 @@ import 'dart:ui' show Rect;
 
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/parent_model.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
 
-class ChildModel extends ChildEntity {
+class ChildModel extends UserModel {
+  final bool withoutPhone;
+  final String? parentId;
+    final List<ParentModel>? parents;
+  final DateTime birthDate;
   const ChildModel({
     required String id,
-    required String name,
+    String? name,
     required String email,
-    required bool withoutPhone,
-    required String parentId,
-    required AvatarEntity avatar,
+    AvatarEntity avatar = const NoneAvatarEntity(),
     required UserType userType,
-    required Role role,
-    required DateTime birthDate,
+    this.parentId,
+    this.withoutPhone = false,
+    this.parents,
+    Role? role,
+    required this.birthDate,
   }) : super(
           role: role,
           id: id,
           name: name,
           email: email,
-          withoutPhone: withoutPhone,
-          parentId: parentId,
           avatar: avatar,
           userType: userType,
-          birthDate: birthDate,
         );
   @override
-   Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'email': email,
       'avatar': avatar.toMap(),
-      'userType': userType.toString(),
-      'role': role.toString(),
+      'userType': userType.name,
+      'role': role?.name,
       'parentId': parentId,
       'withoutPhone': withoutPhone,
       'birthDate': birthDate.toIso8601String(),
     };
   }
 
-  static ChildEntity fromMap(Map<String, dynamic> map, String uid) {
+  static ChildModel fromMap(Map<String, dynamic> map, String uid) {
     late AvatarEntity avatarEntity;
     switch (map['avatarType']) {
       case 'network':
@@ -60,7 +64,7 @@ class ChildModel extends ChildEntity {
       default:
         avatarEntity = const NoneAvatarEntity();
     }
-    return ChildEntity(
+    return ChildModel(
       id: uid,
       name: map['name'],
       email: map['email'],
@@ -86,4 +90,30 @@ class ChildModel extends ChildEntity {
       birthDate: entity.birthDate,
     );
   }
+
+  @override
+  ChildModel copyWith(
+      {String? id,
+      String? name,
+      String? email,
+      AvatarEntity? avatar,
+      UserType? userType,
+      Role? role,
+      bool? isRoleShown,
+      List<ChildEntity>? children,
+      String? parentId,
+      bool? withoutPhone,
+      DateTime? birthDate}) {
+    return ChildModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatar: avatar ?? this.avatar,
+      userType: userType ?? this.userType,
+      role: role ?? this.role,
+      parentId: parentId ?? this.parentId,
+      withoutPhone: withoutPhone ?? this.withoutPhone,
+      birthDate: birthDate ?? this.birthDate,
+    );
+      }
 }

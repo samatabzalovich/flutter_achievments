@@ -4,7 +4,9 @@ import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_field.dart';
 import 'package:flutter_achievments/core/common/widgets/social_media.dart';
+import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginBody extends StatefulWidget {
   const LoginBody({
@@ -17,10 +19,10 @@ class LoginBody extends StatefulWidget {
 
 class _LoginBodyState extends State<LoginBody> with TickerProviderStateMixin {
   late AnimationController _buttonAnimationController;
-  late AnimationController _formAnimationController;
+  // late AnimationController _formAnimationController;
 
-  late Tween<Offset> _inviteButtonsTween;
-  late Tween<Offset> _formTween;
+  // late Tween<Offset> _inviteButtonsTween;
+  // late Tween<Offset> _formTween;
 
   late FocusNode _emailFocusNode;
   late FocusNode _passwordFocusNode;
@@ -37,12 +39,12 @@ class _LoginBodyState extends State<LoginBody> with TickerProviderStateMixin {
     _buttonAnimationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
 
-    _formAnimationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    _inviteButtonsTween =
-        Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero);
-    _formTween =
-        Tween<Offset>(begin: const Offset(0, 0), end: const Offset(0, 0.5));
+    // _formAnimationController = AnimationController(
+    //     vsync: this, duration: const Duration(milliseconds: 500));
+    // _inviteButtonsTween =
+    //     Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero);
+    // _formTween =
+    //     Tween<Offset>(begin: const Offset(0, 0), end: const Offset(0, 0.5));
 
     _buttonWidth = 256;
   }
@@ -77,33 +79,33 @@ class _LoginBodyState extends State<LoginBody> with TickerProviderStateMixin {
     );
   }
 
-  Widget _inviteButtonsBuilder(
-      {required VoidCallback onFirstButtonPressed,
-      required VoidCallback onSecondButtonPressed,
-      required String firstButtonTitle,
-      required String secondButtonTitle}) {
-    return Column(
-      children: [
-        const CustomText.darkBlueTitle(
-          LocaleKeys.byInviteCode,
-        ),
-        const SizedBox(height: 24),
-        MyElevatedButton(
-          onPressed: onFirstButtonPressed,
-          width: _buttonWidth,
-          child: CustomText(firstButtonTitle),
-        ),
-        const SizedBox(height: 14),
-        MyElevatedButton(
-          onPressed: onSecondButtonPressed,
-          width: _buttonWidth,
-          child: CustomText(
-            secondButtonTitle,
-          ),
-        )
-      ],
-    );
-  }
+  // Widget _inviteButtonsBuilder(
+  //     {required VoidCallback onFirstButtonPressed,
+  //     required VoidCallback onSecondButtonPressed,
+  //     required String firstButtonTitle,
+  //     required String secondButtonTitle}) {
+  //   return Column(
+  //     children: [
+  //       const CustomText.darkBlueTitle(
+  //         LocaleKeys.byInviteCode,
+  //       ),
+  //       const SizedBox(height: 24),
+  //       MyElevatedButton(
+  //         onPressed: onFirstButtonPressed,
+  //         width: _buttonWidth,
+  //         child: CustomText(firstButtonTitle),
+  //       ),
+  //       const SizedBox(height: 14),
+  //       MyElevatedButton(
+  //         onPressed: onSecondButtonPressed,
+  //         width: _buttonWidth,
+  //         child: CustomText(
+  //           secondButtonTitle,
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   Widget _formBuilder() {
     return GestureDetector(
@@ -142,7 +144,7 @@ class _LoginBodyState extends State<LoginBody> with TickerProviderStateMixin {
               changeButtonColor();
             },
             validator: (value) {
-              return value.length > 6;
+              return value.length >= 6;
             },
             onSubmitted: (value) {
               _passwordFocusNode.unfocus();
@@ -156,7 +158,8 @@ class _LoginBodyState extends State<LoginBody> with TickerProviderStateMixin {
             controller: _buttonAnimationController,
             width: _buttonWidth,
             onPressed: () {
-              print("valid");
+              BlocProvider.of<AuthCubit>(context)
+                  .signInWithEmailAndPassword(_email, _password);
             },
           ),
         ],
@@ -179,7 +182,7 @@ class _LoginBodyState extends State<LoginBody> with TickerProviderStateMixin {
   }
 
   void changeButtonColor() {
-    if (isEmailValid(_email) && _password.length > 6) {
+    if (isEmailValid(_email) && _password.length >= 6) {
       _buttonAnimationController.forward();
     } else {
       _buttonAnimationController.reverse();

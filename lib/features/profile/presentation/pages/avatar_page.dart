@@ -42,14 +42,9 @@ class AvatarPage extends StatelessWidget {
         }
         if (state is ProfileStateChildCreated) {
           LoadingScreen.instance().hide();
-          final parent =
-              (Provider.of<UserProvider>(context, listen: false).currentUser ??
-                  const ParentEntity(
-                      id: 'id',
-                      email: 'email',
-                      avatarEntity: NoneAvatarEntity(),
-                      userType: UserType.parent,
-                      children: [])) as ParentEntity;
+          final user =
+              (Provider.of<UserProvider>(context, listen: false).currentUser);
+              final parent = user as ParentEntity;
           if (parent.children == null) {
             final parentProfile = parent.copyWith(children: [state.user]);
             Provider.of<UserProvider>(context, listen: false)

@@ -3,20 +3,19 @@ import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
 
-import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/error/auth_errors/auth_error.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/parent_model.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
 
 abstract class AuthRemoteSource {
-  Future<UserEntity> signUpWithEmailAndPassword(
+  Future<UserModel> signUpWithEmailAndPassword(
       {required String email,
       required String password,
       required UserType userType});
-  Future<UserEntity> signInWithEmailAndPassword(
+  Future<UserModel> signInWithEmailAndPassword(
       {required String email, required String password});
   // Future<UserEntity> signInWithFacebook();
   // Future<UserEntity> signInWithApple();
@@ -31,7 +30,7 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
     this._firebaseFirestore,
   );
   @override
-  Future<UserEntity> signInWithEmailAndPassword(
+  Future<UserModel> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -57,7 +56,7 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
   }
 
   @override
-  Future<UserEntity> signUpWithEmailAndPassword(
+  Future<UserModel> signUpWithEmailAndPassword(
       {required String email,
       required String password,
       required UserType userType}) async {
@@ -71,13 +70,11 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
         'email': email,
         'userType': userType.name,
       });
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
       if (userType == UserType.parent) {
         return ParentModel(
-            id: credential.user!.uid, email: email, userType: userType);
+            id: credential.user!.uid, email: email, userType: userType,);
       } else {
-        return ChildEntity(
+        return ChildModel(
             id: credential.user!.uid, email: email, userType: userType, birthDate: DateTime.now());
       }
     } on FirebaseAuthException catch (e) {

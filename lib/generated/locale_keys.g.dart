@@ -74,5 +74,6 @@ abstract class  LocaleKeys {
   static const registerChild = 'registerChild';
   static const registerChildButton = 'registerChildButton';
   static const back = 'back';
+  static const signingOut = 'signingOut';
 
 }

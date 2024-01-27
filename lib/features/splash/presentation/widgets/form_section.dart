@@ -31,13 +31,13 @@ class FormSection extends StatelessWidget {
           AuthButtons(),
           SizedBox(height: 20),
           SocialMedia(),
-          const SizedBox(height: 8),
-        const CustomText(
-          'Есть вопросы? Свяжитесь с нами.',
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: socialMediaTextColor,
-        )
+          SizedBox(height: 8),
+          CustomText(
+            'Есть вопросы? Свяжитесь с нами.',
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: socialMediaTextColor,
+          )
         ],
       ),
     );

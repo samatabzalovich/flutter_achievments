@@ -87,7 +87,8 @@ class CodegenLoader extends AssetLoader{
   "goBack": "Вернуться назад",
   "registerChild": "Зарегистрировать ребёнка",
   "registerChildButton": "Зарегистрировать",
-  "back": "Назад"
+  "back": "Назад",
+  "signingOut": "Выход из учетной записи..."
 };
 static const Map<String,dynamic> en = {
   "error": "Error",
@@ -162,7 +163,8 @@ static const Map<String,dynamic> en = {
   "goBack": "Вернуться назад",
   "registerChild": "Зарегистрировать ребёнка",
   "registerChildButton": "Зарегистрировать",
-  "back": "Назад"
+  "back": "Назад",
+  "signingOut": "Выход из учетной записи..."
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": ru, "en": en};
 }

@@ -10,7 +10,7 @@ Future<void> initializeDependencies() async {
         ..registerLazySingleton(() => FirebaseAuth.instance)
         ..registerLazySingleton(() => FirebaseFirestore.instance)
         ..registerLazySingleton(() => FirebaseStorage.instance)
-
+        ..registerLazySingleton(() => FirebaseFunctions.instance)
         //data sources
         .. registerLazySingleton<AuthRemoteSource>(() => AuthRemoteSourceImpl(sl(), sl()))
         ..registerLazySingleton<SplashDataSource>(() => SplashDataSourceImpl(sl(), sl()))

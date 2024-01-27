@@ -20,13 +20,6 @@ abstract class UserEntity extends Equatable {
     required this.userType,
     required this.role,
   });
-  const UserEntity.empty()
-      : id = '',
-        name = 'guest',
-        email = 'guest@gmail.com',
-        avatar = const NoneAvatarEntity(),
-        userType = UserType.unknown,
-        role = Role.unknown;
 
   @override
   List<Object?> get props => [name, email, avatar, userType, id];
@@ -40,14 +33,5 @@ abstract class UserEntity extends Equatable {
     Role? role,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'avatar': avatar.toMap(),
-      'userType': userType.toString(),
-      'role': role.toString(),
-    };
-  }
+  
 }

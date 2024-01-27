@@ -1,4 +1,5 @@
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
@@ -59,6 +60,21 @@ class ChildEntity extends UserEntity {
       withoutPhone: withoutPhone ?? this.withoutPhone,
       parents: parents ?? this.parents,
       birthDate: birthDate ?? this.birthDate,
+    );
+  }
+
+  static ChildEntity fromModel(ChildModel model) {
+    return ChildEntity(
+      id: model.id,
+      name: model.name,
+      email: model.email,
+      avatar: model.avatar,
+      userType: model.userType,
+      role: model.role,
+      parentId: model.parentId,
+      withoutPhone: model.withoutPhone,
+      parents: model.parents?.map((e) => ParentEntity.fromModel(e)).toList(),
+      birthDate: model.birthDate,
     );
   }
 }

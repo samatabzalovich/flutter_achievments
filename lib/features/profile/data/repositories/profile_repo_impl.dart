@@ -15,11 +15,11 @@ class ProfileRepoImpl implements ProfileRepo {
 
   ProfileRepoImpl(this._profileRemoteSource);
   @override
-  ResultFuture<ProfileModel> updateProfile(ProfileEntity profile) async {
+  ResultFuture<ProfileEntity> updateProfile(ProfileEntity profile) async {
     try {
       await _profileRemoteSource.updateProfile(
           profile: ProfileModel.fromEntity(profile));
-      return Right(ProfileModel.fromEntity(profile));
+      return Right(profile);
     } on ApiException catch (e) {
       return Left(ApiFailure.fromException(e));
     }
@@ -39,20 +39,22 @@ class ProfileRepoImpl implements ProfileRepo {
   @override
   ResultFuture<String> createChild(
       {required String email, required String password}) async {
-        try {
-          final id = await _profileRemoteSource.createChild(email: email, password: password);
-          return Right(id);
-        } on ApiException catch (e) {
-          return Left(ApiFailure.fromException(e));
-        }
-      }
+    try {
+      final id = await _profileRemoteSource.createChild(
+          email: email, password: password);
+      return Right(id);
+    } on ApiException catch (e) {
+      return Left(ApiFailure.fromException(e));
+    }
+  }
 
   @override
-  ResultFuture<String> createChildProfile(ProfileEntity profile) async{
+  ResultFuture<String> createChildProfile(ProfileEntity profile) async {
     try {
-      final id = await _profileRemoteSource.createChildProfile(user: ChildModel.fromEntity((ProfileModel.fromEntity(profile)).user as ChildEntity));
+      final id = await _profileRemoteSource.createChildProfile(
+          user: ProfileModel.fromEntity(profile).userModel as ChildModel);
       return Right(id);
-    }on ApiException catch (e) {
+    } on ApiException catch (e) {
       return Left(ApiFailure.fromException(e));
     }
   }

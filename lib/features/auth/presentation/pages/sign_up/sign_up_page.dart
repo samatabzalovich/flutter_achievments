@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/dialogs/show_error_dialog.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/common/widgets/loading/loading_screen.dart';
 
 import 'package:flutter_achievments/core/enums/user_type.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_achievments/features/app/presentation/provider/user_prov
 import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/account_pref_page.dart';
 import 'package:flutter_achievments/features/auth/presentation/widgets/sign_up_widgets/sign_up_body.dart';
-import 'package:flutter_achievments/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -30,10 +28,11 @@ class SignUpPage extends StatelessWidget {
           LoadingScreen.instance().show(context: context, text: '');
         }
         if (state is AuthStateSuccess) {
-          Provider.of<UserProvider>(context, listen: false).setUser(state.userEntity);
+          Provider.of<UserProvider>(context, listen: false).setUser(state.userEntity!);
           LoadingScreen.instance().hide();
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              AccountPrefPage.routeName, (route) => route.settings.name == '/');
+          Navigator.pushNamed(
+            context,
+              AccountPrefPage.routeName, );
         }
         if (state is AuthStateError) {
           LoadingScreen.instance().hide();

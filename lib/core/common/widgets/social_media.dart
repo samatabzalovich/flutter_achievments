@@ -28,8 +28,9 @@ class SocialMedia extends StatelessWidget {
             _iconBuilder('assets/icons/facebook.svg', onTap: () {
               print('facebook');
             }),
-            _iconBuilder('assets/icons/apple.svg', onTap: () {
-              print('apple');
+            _iconBuilder('assets/icons/apple.svg', onTap: () async {
+              // final iss = await DatetimeSetting.timeIsAuto();
+              // print(iss);
             }),
             _iconBuilder('assets/icons/vkontakte.svg', onTap: () {
               print('vkontakte');
@@ -39,7 +40,6 @@ class SocialMedia extends StatelessWidget {
             }),
           ],
         ),
-        
       ],
     );
   }
