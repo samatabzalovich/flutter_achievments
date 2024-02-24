@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_navbar.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
-import 'package:flutter_achievments/features/task/presentation/widgets/common/animated_navbar.dart';
 import 'package:provider/provider.dart';
 
 class ParentHomePage extends StatefulWidget {
@@ -19,7 +17,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
   @override
   Widget build(BuildContext context) {
     final parent = Provider.of<UserProvider>(context, listen: true).currentUser as ParentEntity;
-    return Scaffold(
+    return const Scaffold(
       body: Column(
         children: [
           // AnimatedNavbar('home', user: parent, )

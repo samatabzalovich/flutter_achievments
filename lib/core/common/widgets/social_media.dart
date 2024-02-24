@@ -29,8 +29,7 @@ class SocialMedia extends StatelessWidget {
               print('facebook');
             }),
             _iconBuilder('assets/icons/apple.svg', onTap: () async {
-              // final iss = await DatetimeSetting.timeIsAuto();
-              // print(iss);
+
             }),
             _iconBuilder('assets/icons/vkontakte.svg', onTap: () {
               print('vkontakte');

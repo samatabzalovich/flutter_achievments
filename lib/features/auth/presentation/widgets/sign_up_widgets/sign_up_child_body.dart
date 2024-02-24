@@ -1,16 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/core/common/widgets/animated_custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/blue_green_buttons.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_field.dart';
-import 'package:flutter_achievments/core/constant/colors.dart';
-import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
-import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/avatar_page.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
-import 'package:provider/provider.dart';
 
 class SignUpChildBody extends StatefulWidget {
   const SignUpChildBody(this.childProfile, {super.key});

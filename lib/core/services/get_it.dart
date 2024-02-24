@@ -23,6 +23,5 @@ import 'package:flutter_achievments/features/splash/domain/repositories/splash_r
 import 'package:flutter_achievments/features/splash/domain/usecases/auth_state.dart';
 import 'package:flutter_achievments/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'get_it.main.dart';

@@ -7,13 +7,11 @@ abstract class RewardRepository {
   ResultFuture<void> createReward(RewardEntity reward);
   ResultFuture<void> updateReward(RewardEntity reward);
   ResultFuture<void> deleteReward(String id);
-  ResultFuture<void> completeReward(String id); // for child then parent sees it in pending which means he can accept or reject it
+  ResultFuture<void> issueReward(String id); 
   ResultFuture<void> acceptReward(String id);
-  ResultFuture<void> refuseReward(String id);//child refused the reward
-  ResultFuture<void> rejectReward(String id);// parent rejected the reward
-  ResultFuture<void> redoReward(String id);
+  ResultFuture<void> cancelReward(String id);
+  ResultFuture<void> moveRewardToIssueList(String id);
   ResultFuture<void> suggestReward(String id);
-  ResultFuture<void> attachPhotoReport({String filePath, Sink<double>? progressSink});
 }
 
 class GetRewardsParams {

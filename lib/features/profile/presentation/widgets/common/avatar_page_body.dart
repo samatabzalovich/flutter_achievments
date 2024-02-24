@@ -1,23 +1,15 @@
-import 'dart:io' show File;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
-import 'package:flutter_achievments/core/services/get_it.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/common/widgets/blue_green_buttons.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_text_button.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
-import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter_achievments/features/profile/presentation/bloc/profile_event.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/child_profile_page.dart';
 import 'package:flutter_achievments/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:flutter_achievments/features/profile/presentation/widgets/common/select_avatar_form.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class AvatarPageBody extends StatelessWidget {

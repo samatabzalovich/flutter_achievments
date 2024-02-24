@@ -5,7 +5,6 @@ import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
 import 'package:flutter_achievments/core/routes/route_not_found_page.dart';
 import 'package:flutter_achievments/core/services/get_it.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
 import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter_achievments/features/auth/presentation/pages/login/login_page.dart';
 import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sign_up_child_page.dart';
@@ -19,6 +18,5 @@ import 'package:flutter_achievments/features/profile/presentation/pages/choose_t
 import 'package:flutter_achievments/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/home/child_home_page.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
-import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'routes.dart';

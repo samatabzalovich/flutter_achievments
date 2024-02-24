@@ -1,10 +1,10 @@
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+
 import 'package:flutter_achievments/core/enums/message_type.dart';
 
 class MessageEntity extends Equatable {
   final String senderId;
-  final String recieverid;
+  final String recieverId;
   final String text;
   final MessageEnum type;
   final DateTime timeSent;
@@ -17,7 +17,7 @@ class MessageEntity extends Equatable {
 
   const MessageEntity({
     required this.senderId,
-    required this.recieverid,
+    required this.recieverId,
     required this.text,
     required this.type,
     required this.timeSent,
@@ -32,7 +32,7 @@ class MessageEntity extends Equatable {
   @override
   List<Object?> get props => [
         senderId,
-        recieverid,
+        recieverId,
         text,
         type,
         timeSent,
@@ -43,4 +43,6 @@ class MessageEntity extends Equatable {
         repliedMessageType,
         taskStateMessageType,
       ];
+
+  
 }

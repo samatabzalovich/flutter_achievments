@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/features/auth/presentation/pages/login/login_page.dart';

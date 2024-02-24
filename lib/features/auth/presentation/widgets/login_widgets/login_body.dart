@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/animated_custom_button.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_field.dart';
 import 'package:flutter_achievments/core/common/widgets/social_media.dart';

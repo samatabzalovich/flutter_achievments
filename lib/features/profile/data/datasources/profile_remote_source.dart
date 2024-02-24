@@ -2,15 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-import 'package:flutter_achievments/core/error/auth_errors/auth_error.dart';
 import 'package:flutter_achievments/core/error/exception.dart';
-import 'package:flutter_achievments/core/error/failure.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
 import 'package:flutter_achievments/features/profile/data/model/profile_model.dart';
 

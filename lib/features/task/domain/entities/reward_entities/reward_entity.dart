@@ -2,8 +2,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_achievments/core/enums/reward_type.dart';
 
-import 'package:flutter_achievments/core/enums/user_type.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
 
 class RewardEntity extends Equatable {
@@ -15,7 +13,7 @@ class RewardEntity extends Equatable {
   final bool isInfinite;
   final int cost;
   final int? available;
-  final List<ChildEntity> children;
+  final List<String> children;
   final String createdBy;
   final RewardType type;
   const RewardEntity({

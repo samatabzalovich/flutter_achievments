@@ -18,8 +18,8 @@ const Color greenButtonGradient2 = Color(0xff7AD751);
 const Color buttonDisabledGradient = Color(0xffC7DDDF);
 const Color buttonDisabledGradient2 = Color(0xffA6BDBF);
 
-const Color buttonInnerShadowColor = Color(0xff39395A40);
-const Color buttonShadowColor = Color(0xff1D72BF33);
+const Color buttonInnerShadowColor = Color(0xff39395a40);
+const Color buttonShadowColor = Color(0xff1d72bf33);
 
 const Color borderBlueColor = Color(0xff3396EF);
 const Color lightBlue = Color(0xff0DCBED);

@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'dart:convert';
 import 'dart:ui' show Rect;
 
 import 'package:equatable/equatable.dart';
@@ -17,6 +16,28 @@ abstract class AvatarEntity extends Equatable {
   Map<String, dynamic> toMap();
   @override
   List<Object?> get props => [photoUrl, type];
+
+  static AvatarEntity fromMap(Map<String, dynamic> map) {
+    late AvatarEntity avatarEntity;
+    switch (map['avatarType']) {
+      case 'network':
+        avatarEntity = NetworkAvatarEntity(
+          map['photoUrl'],
+          crop: Rect.fromLTRB(
+              map['crop']['left'],
+              map['crop']['top'],
+              map['crop']['right'],
+              map['crop']['bottom']),
+        );
+        break;
+      case 'asset':
+        avatarEntity = AssetAvatarEntity(map['photoUrl']);
+        break;
+      default:
+        avatarEntity = const NoneAvatarEntity();
+    }
+    return avatarEntity;
+  }
 }
 
 class NetworkAvatarEntity extends AvatarEntity {

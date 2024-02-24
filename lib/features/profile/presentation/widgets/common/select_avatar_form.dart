@@ -1,8 +1,6 @@
 import 'dart:io' show File;
 import 'package:flutter_achievments/core/common/widgets/avatar_builder.dart';
-import 'package:path_provider/path_provider.dart';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';

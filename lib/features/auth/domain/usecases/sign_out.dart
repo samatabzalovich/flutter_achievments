@@ -1,5 +1,3 @@
-import 'package:flutter_achievments/core/usecase/usecase.dart';
-import 'package:flutter_achievments/core/utils/typedefs.dart';
 import 'package:flutter_achievments/features/auth/domain/repositories/auth_repo.dart';
 
 class SignOutUseCase {

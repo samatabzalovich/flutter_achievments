@@ -19,3 +19,9 @@ abstract class StreamUseCaseWithoutParams<Type> {
   const StreamUseCaseWithoutParams();
   ResultStream<Type> call();
 }
+
+abstract class PlainStreamUseCaseWithoutParams<Type> {
+  const PlainStreamUseCaseWithoutParams();
+  Stream<Type> call();
+}
+

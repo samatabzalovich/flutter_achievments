@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
-import 'package:flutter_achievments/features/auth/domain/repositories/auth_repo.dart';
 import 'package:flutter_achievments/features/auth/domain/usecases/register.dart';
 import 'package:flutter_achievments/features/auth/domain/usecases/sign_in.dart';
 import 'package:flutter_achievments/features/auth/domain/usecases/sign_out.dart';

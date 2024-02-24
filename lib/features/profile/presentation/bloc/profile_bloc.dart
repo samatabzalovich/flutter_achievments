@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/avatar_type.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';

@@ -3,13 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/routes/router.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
-import 'package:flutter_achievments/features/auth/presentation/pages/login/login_page.dart';
-import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sign_up_child_page.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/child_profile_page.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/account_pref_page.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/choose_type_page.dart';
-import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sign_up_page.dart';
-import 'package:flutter_achievments/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 

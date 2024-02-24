@@ -1,19 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:crop_image/crop_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/blue_green_buttons.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
-import 'package:flutter_achievments/core/common/widgets/loading/loading_screen.dart';
 
 class ImageCropBody extends StatefulWidget {
   const ImageCropBody({

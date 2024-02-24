@@ -1,4 +1,3 @@
-import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/usecase/usecase.dart';
 import 'package:flutter_achievments/core/utils/typedefs.dart';
 import 'package:flutter_achievments/features/profile/domain/entities/profile_entity.dart';

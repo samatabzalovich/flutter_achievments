@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_navbar.dart';
 import 'package:flutter_achievments/core/common/widgets/loading/loading_screen.dart';
 import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/avatar_page.dart';
 
 import 'package:flutter_achievments/features/profile/presentation/widgets/parent_profile/account_pref_body.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';

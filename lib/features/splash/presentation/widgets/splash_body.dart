@@ -1,16 +1,10 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
-import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/services/get_it.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/features/app/presentation/helper/navigator_user_helper.dart';
-import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/account_pref_page.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/child_profile_page.dart';
 import 'package:flutter_achievments/features/splash/presentation/bloc/auth_status.dart';
 import 'package:flutter_achievments/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:flutter_achievments/features/splash/presentation/bloc/system_time_status.dart';
@@ -177,14 +171,12 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
     await _initializeAnimationController.forward();
     splashSub = splashBloc.authStatus.listen((event) {
       if (event is AuthStatusLoggedOut) {
-            Timer(const Duration(milliseconds: 1000), () {
-              _splashAnimationController.forward();
-            });
-        
-      } else if (event is AuthStatusLoggedIn) {
         Timer(const Duration(milliseconds: 1000), () {
-              _splashAnimationController.forward();
-            });
+          _splashAnimationController.forward();
+        });
+      } else if (event is AuthStatusLoggedIn) {
+        print(event.userEntity);
+        navigateUserBasedOnType(event.userEntity!, context);
       }
     });
   }

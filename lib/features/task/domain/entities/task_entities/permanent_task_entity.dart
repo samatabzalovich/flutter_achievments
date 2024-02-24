@@ -1,26 +1,25 @@
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
+import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_avatar.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 
-class PermanentTask extends TaskEntity {
+class PermanentTaskEntity extends TaskEntity {
   final List<int> repeatOnDays;
   final int maximumReward;
   final bool isHidddenWhenMax;
   final bool isMandatory;
-  const PermanentTask({
+  const PermanentTaskEntity({
     required String id,
     required String title,
     String? description,
-    required DateTime date,
     required TaskStateEnum state,
-    required TaskAvatar avatar,
+    required TaskAvatarEntity avatar,
     required CategoryEntity category,
     required int reward,
     required String parentId,
-    required List<ChildEntity> children,
+    required List<String> children,
     required bool commonTask,
     required bool withoutChecking,
     required bool isPhotoReportIncluded,
@@ -29,8 +28,7 @@ class PermanentTask extends TaskEntity {
     required this.maximumReward,
     required this.isHidddenWhenMax,
     required this.isMandatory,
-        required DateTime createdAt,
-
+    required DateTime createdAt,
   }) : super(
           id: id,
           title: title,
@@ -46,5 +44,6 @@ class PermanentTask extends TaskEntity {
           isPhotoReportIncluded: isPhotoReportIncluded,
           photoReport: photoReport,
           createdAt: createdAt,
+          type: TaskType.permanent,
         );
 }

@@ -1,7 +1,5 @@
-import 'dart:ui' show Rect;
 
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-import 'package:flutter_achievments/features/app/data/shared_models/parent_model.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
@@ -57,16 +55,5 @@ class ParentEntity extends UserEntity {
     );
   }
 
-  static ParentEntity fromModel(ParentModel model) {
-    return ParentEntity(
-      id: model.id,
-      name: model.name,
-      email: model.email,
-      avatarEntity: model.avatar,
-      userType: model.userType,
-      role: model.role,
-      isRoleShown: model.isRoleShown,
-      children: model.children?.map((e) => ChildEntity.fromModel(e)).toList(),
-    );
-  }
+
 }

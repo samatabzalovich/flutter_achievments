@@ -1,6 +1,6 @@
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
+import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_avatar.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
@@ -14,16 +14,15 @@ class OneTimeTaskEntity extends TaskEntity {
     required String id,
     required String title,
     String? description,
-    required DateTime date,
     required TaskStateEnum state,
-    required TaskAvatar avatar,
+    required TaskAvatarEntity avatar,
     required CategoryEntity category,
     required this.startDate,
     required this.deadLine,
     required this.startTime,
     required int reward,
     required String parentId,
-    required List<ChildEntity> children,
+    required List<String> children,
     required bool commonTask,
     required bool withoutChecking,
     required bool isPhotoReportIncluded,
@@ -45,5 +44,6 @@ class OneTimeTaskEntity extends TaskEntity {
           isPhotoReportIncluded: isPhotoReportIncluded,
           photoReport: photoReport,
           createdAt: createdAt,
+          type: TaskType.oneTime,
         );
 }

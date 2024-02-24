@@ -8,7 +8,7 @@ import 'package:flutter_achievments/core/common/widgets/loading/loading_screen_c
 class LoadingScreen {
   // singleton
   LoadingScreen._sharedInstance();
-  static late final LoadingScreen _shared = LoadingScreen._sharedInstance();
+  static final LoadingScreen _shared = LoadingScreen._sharedInstance();
   factory LoadingScreen.instance() => _shared;
 
   LoadingScreenController? controller;
@@ -36,8 +36,8 @@ class LoadingScreen {
     required BuildContext context,
     required String text,
   }) {
-    final _text = StreamController<String>();
-    _text.add(text);
+    final text0 = StreamController<String>();
+    text0.add(text);
 
     final renderBox = context.findRenderObject() as RenderBox;
     final availableSize = renderBox.size;
@@ -72,7 +72,7 @@ class LoadingScreen {
                         height: 10.0,
                       ),
                       StreamBuilder<String>(
-                        stream: _text.stream,
+                        stream: text0.stream,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return CustomText.darkBlueTitle(
@@ -101,12 +101,12 @@ class LoadingScreen {
 
     return LoadingScreenController(
       close: () {
-        _text.close();
+        text0.close();
         overlay.remove();
         return true;
       },
       update: (text) {
-        _text.add(text);
+        text0.add(text);
         return true;
       },
     );

@@ -1,5 +1,4 @@
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_button.dart';

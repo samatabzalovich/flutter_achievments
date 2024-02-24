@@ -1,5 +1,4 @@
 import 'dart:io' show File;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_navbar.dart';

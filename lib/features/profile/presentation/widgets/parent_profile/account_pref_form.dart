@@ -1,16 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:ffi';
-import 'dart:math';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
-import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/common/widgets/animated_custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_text_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_field.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';

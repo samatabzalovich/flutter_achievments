@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/child_profile_page.dart';
 import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sign_up_page.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_svg/flutter_svg.dart';

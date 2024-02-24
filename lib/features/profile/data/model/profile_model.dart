@@ -1,12 +1,9 @@
-import 'package:flutter_achievments/core/common/extensions/type_cast.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
-import 'package:flutter_achievments/core/error/failure.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/parent_model.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/features/profile/domain/entities/profile_entity.dart';
 
 class ProfileModel extends ProfileEntity {

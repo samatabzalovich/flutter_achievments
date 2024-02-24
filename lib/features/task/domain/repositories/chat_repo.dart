@@ -3,10 +3,12 @@ import 'package:flutter_achievments/features/task/domain/entities/shared/message
 
 abstract class ChatRepo {
   ResultFuture<void> sendMessage(MessageEntity message);
-  ResultStream<MessageEntity> getMessages();
-  ResultFuture<void> sendMessageSeen({
-    String recieverUserId,
-    String messageId,
+  Stream<List<MessageEntity>> getMessages();
+  ResultFuture<void> markMessageSeen({
+    required String messageId,
   });
-  ResultFuture<void> sendFileMessage({MessageEntity message, String filePath, Sink<double>? progressSink});
+  ResultFuture<void> sendFileMessage(
+      {required MessageEntity message,
+      required String filePath,
+      Sink<double>? progressSink});
 }

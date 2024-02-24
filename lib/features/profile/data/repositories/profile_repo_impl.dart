@@ -3,7 +3,6 @@ import 'package:flutter_achievments/core/error/exception.dart';
 import 'package:flutter_achievments/core/error/failure.dart';
 import 'package:flutter_achievments/core/utils/typedefs.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
 import 'package:flutter_achievments/features/profile/data/datasources/profile_remote_source.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
 import 'package:flutter_achievments/features/profile/data/model/profile_model.dart';
