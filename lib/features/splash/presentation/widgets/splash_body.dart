@@ -175,7 +175,6 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
           _splashAnimationController.forward();
         });
       } else if (event is AuthStatusLoggedIn) {
-        print(event.userEntity);
         navigateUserBasedOnType(event.userEntity!, context);
       }
     });

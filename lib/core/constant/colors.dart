@@ -23,3 +23,7 @@ const Color buttonShadowColor = Color(0xff1d72bf33);
 
 const Color borderBlueColor = Color(0xff3396EF);
 const Color lightBlue = Color(0xff0DCBED);
+
+const Color dropDownBackground = Color(0xff3396EF);
+const Color greenTileBackground = Color(0xffD6FFC3);
+const Color blueTileShadow = Color.fromRGBO(13, 203, 237, 0.3);

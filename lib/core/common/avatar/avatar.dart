@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
-import 'dart:ui' show Rect;
+import 'dart:async';
+import 'dart:ui' as ui show Image, Rect, Size, decodeImageFromList;
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' show Image;
 import 'package:flutter_achievments/core/enums/avatar_type.dart';
 
@@ -17,21 +17,19 @@ abstract class AvatarEntity extends Equatable {
   @override
   List<Object?> get props => [photoUrl, type];
 
-  static AvatarEntity fromMap(Map<String, dynamic> map) {
+  static AvatarEntity fromMap(Map<String, dynamic>? map) {
     late AvatarEntity avatarEntity;
-    switch (map['avatarType']) {
+
+    switch (map?['avatarType']) {
       case 'network':
         avatarEntity = NetworkAvatarEntity(
-          map['photoUrl'],
-          crop: Rect.fromLTRB(
-              map['crop']['left'],
-              map['crop']['top'],
-              map['crop']['right'],
-              map['crop']['bottom']),
+          map!['photoUrl'],
+          crop: Rect.fromLTRB(map['crop']['left'], map['crop']['top'],
+              map['crop']['right'], map['crop']['bottom']),
         );
         break;
       case 'asset':
-        avatarEntity = AssetAvatarEntity(map['photoUrl']);
+        avatarEntity = AssetAvatarEntity(map!['photoUrl']);
         break;
       default:
         avatarEntity = const NoneAvatarEntity();
@@ -60,6 +58,7 @@ class NetworkAvatarEntity extends AvatarEntity {
       image: image ?? this.image,
     );
   }
+
   @override
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -72,6 +71,16 @@ class NetworkAvatarEntity extends AvatarEntity {
         'bottom': crop.bottom,
       }
     };
+  }
+
+  Future<ui.Image> loadImage() async {
+    final ByteData data =
+        await NetworkAssetBundle(Uri.parse(photoUrl)).load("");
+    final Completer<ui.Image> completer = Completer();
+    ui.decodeImageFromList(data.buffer.asUint8List(), (ui.Image img) {
+      return completer.complete(img);
+    });
+    return completer.future;
   }
 }
 
@@ -97,3 +106,18 @@ class NoneAvatarEntity extends AvatarEntity {
   }
 }
 
+extension RectExtensions on ui.Rect {
+  ui.Rect multiply(ui.Size size) => ui.Rect.fromLTRB(
+        left * size.width,
+        top * size.height,
+        right * size.width,
+        bottom * size.height,
+      );
+
+  ui.Rect divide(ui.Size size) => ui.Rect.fromLTRB(
+        left / size.width,
+        top / size.height,
+        right / size.width,
+        bottom / size.height,
+      );
+}

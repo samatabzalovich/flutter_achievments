@@ -15,6 +15,9 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   final FirebaseFirestore _firestore;
   final FirebaseStorage _firebaseStorage;
 
+  DocumentSnapshot? _lastDoc;
+  DateTime? _selectedDate;
+
   RemoteTaskDataSourceImpl(this._firestore, this._firebaseStorage);
 
   @override
@@ -113,9 +116,25 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   }
 
   @override
-  Future<List<TaskModel>> getTasks() async {
+  Future<List<TaskModel>> getTasks({
+    required DateTime selectedDate,
+    int limit = 50,
+  }) async {
     try {
-      final tasksMap = await _firestore.collection('tasks').get();
+        final endOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 23, 59, 59);
+      final query = _firestore
+          .collection('tasks')
+          .where(Filter.or(
+              Filter("deadLine", isLessThanOrEqualTo: endOfDay),
+              Filter("createdAt", isLessThanOrEqualTo: endOfDay)))
+          .orderBy('createdAt')
+          .limit(limit);
+
+      if (_lastDoc != null && _selectedDate == selectedDate) {
+        query.startAfterDocument(_lastDoc!);
+      }
+
+      final tasksMap = await query.get();
       final taskModels = tasksMap.docs.map((e) {
         final data = e.data();
         switch (data['type']) {
@@ -129,7 +148,8 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
             throw const FirestoreErrorUnknown();
         }
       }).toList();
-
+      _lastDoc = tasksMap.docs.last;
+      _selectedDate = selectedDate;
       return taskModels;
     } on FirebaseException catch (e) {
       throw FireStoreError.from(e);
@@ -157,7 +177,10 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<void> rejectTask(String id) async {
     try {
-      await _firestore.collection('tasks').doc(id).update({'state': 'rejected'});
+      await _firestore
+          .collection('tasks')
+          .doc(id)
+          .update({'state': 'rejected'});
     } on FirebaseException catch (e) {
       throw FireStoreError.from(e);
     }
@@ -175,10 +198,7 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<void> updateTask(TaskModel task) async {
     try {
-      await _firestore
-          .collection('tasks')
-          .doc(task.id)
-          .update(task.toMap());
+      await _firestore.collection('tasks').doc(task.id).update(task.toMap());
     } on FirebaseException catch (e) {
       throw FireStoreError.from(e);
     }

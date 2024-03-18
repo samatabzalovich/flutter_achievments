@@ -40,7 +40,7 @@ class RepeatableTaskModel extends RepeatableTaskEntity implements TaskModel{
       'commonTask': commonTask,
       'withoutChecking': withoutChecking,
       'isPhotoReportIncluded': isPhotoReportIncluded,
-      'photoReport': photoReport.toMap(),
+      'photoReport': photoReport?.toMap(),
       'placedInSkipped': placedInSkipped,
       'repeatOnDays': repeatOnDays,
       'maximumReward': maximumReward,
@@ -74,4 +74,6 @@ class RepeatableTaskModel extends RepeatableTaskEntity implements TaskModel{
       startTime: map['startTime'],
     );
   }
+
+  
 }

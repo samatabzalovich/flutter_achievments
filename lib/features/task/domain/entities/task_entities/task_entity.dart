@@ -3,14 +3,14 @@ import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
-import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 
 abstract class TaskEntity extends Equatable {
   final String id;
   final String title;
   final String? description;
   final TaskStateEnum state;
-  final TaskAvatarEntity avatar;
+  final FrameAvatarEntity avatar;
   final CategoryEntity category;
   final int reward;
   final String parentId;
@@ -18,7 +18,7 @@ abstract class TaskEntity extends Equatable {
   final bool commonTask;
   final bool withoutChecking;
   final bool isPhotoReportIncluded;
-  final AvatarEntity photoReport;
+  final AvatarEntity? photoReport;
   final DateTime createdAt;
   final TaskType type;
   const TaskEntity({
@@ -34,10 +34,14 @@ abstract class TaskEntity extends Equatable {
     required this.commonTask,
     required this.withoutChecking,
     required this.isPhotoReportIncluded,
-    required this.photoReport,
+    this.photoReport,
     required this.createdAt,
     required this.type,
   });
+
+  
+
+  
 
   @override
   List<Object?> get props => [

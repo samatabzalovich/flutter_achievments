@@ -7,7 +7,7 @@ abstract class UserModel extends UserEntity {
       required super.email,
       required super.avatar,
       required super.userType,
-      required super.role});
+      required super.role, required super.createdAt});
 
   Map<String, dynamic> toMap();
 

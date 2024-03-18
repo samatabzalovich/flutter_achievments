@@ -3,19 +3,27 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_achievments/core/enums/message_type.dart';
+import 'package:flutter_achievments/core/error/exception.dart';
+import 'package:flutter_achievments/core/error/firestore_errors/firestore_errors.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
+import 'package:flutter_achievments/features/task/data/models/shared/chat_model.dart';
 import 'package:flutter_achievments/features/task/data/models/shared/message_model.dart';
 
 abstract class RemoteChatDataSource {
-  Future<void> sendMessage(MessageModel message);
-  Stream<List<MessageModel>> getMessages();
+  Future<void> sendMessage(MessageModel message, String chatId);
+  Stream<List<MessageModel>> getMessages(String chatId);
   Future<void> sendMessageSeen({
     required String messageId,
   });
   Future<void> sendFileMessage(
       {required MessageModel message,
       required String filePath,
-      Sink<double>? progressSink});
+      Sink<double>? progressSink,
+      required String chatId
+      });
+
+  Stream<List<ChatModel>> getChats();
 }
 
 class RemoteChatDataSourceImpl implements RemoteChatDataSource {
@@ -25,12 +33,13 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
 
   RemoteChatDataSourceImpl(
       this._firestore, this._firebaseStorage, this._firebaseAuth);
+
   @override
-  Stream<List<MessageModel>> getMessages() {
+  Stream<List<MessageModel>> getMessages(String chatId) {
     return _firestore
+        .collection('chat')
+        .doc(chatId)
         .collection('messages')
-        .where('senderId', isEqualTo: _firebaseAuth.currentUser!.uid)
-        .where('recieverid', isEqualTo: _firebaseAuth.currentUser!.uid)
         .orderBy('timeSent')
         .snapshots()
         .map((event) {
@@ -44,7 +53,7 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
   Future<void> sendFileMessage(
       {required MessageModel message,
       required String filePath,
-      Sink<double>? progressSink}) async {
+      Sink<double>? progressSink,required String chatId}) async {
     try {
       final file = File(filePath);
       final fileRef = _firebaseStorage
@@ -86,22 +95,53 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
           subscription.cancel();
         }
       });
-      await sendMessage(message.copyWith(text: downloadUrl!));
+      await sendMessage(message.copyWith(text: downloadUrl!, ), chatId);
     } on StorageError {
+      rethrow;
+    } on ApiException  {
       rethrow;
     }
   }
 
   @override
-  Future<void> sendMessage(MessageModel message) async {
-    await _firestore.collection('messages').doc().set(message.toMap());
+  Future<void> sendMessage(MessageModel message, String chatId) async {
+    try {
+      final batch = _firestore.batch();
+      final messageRef = _firestore
+          .collection('chat')
+          .doc(chatId)
+          .collection('messages')
+          .doc();
+      batch.set(messageRef, message.toMap());
+      batch.update(_firestore.collection('chat').doc(chatId), {
+        'lastMessage': message.text,
+        'lastMessageTime': message.timeSent,
+        'lastMessageType': message.type.fromEnum(),
+      });
+
+      await batch.commit();
+    } on FirebaseException catch (e) {
+      throw FireStoreError.from(e);
+    }
   }
 
   @override
-  Future<void> sendMessageSeen(
-      {required String messageId}) async {
+  Future<void> sendMessageSeen({required String messageId}) async {
     await _firestore.collection('messages').doc(messageId).update({
       'isSeen': true,
+    });
+  }
+
+  @override
+  Stream<List<ChatModel>> getChats() {
+    return _firestore
+        .collection('chat')
+        .where('members', arrayContains: _firebaseAuth.currentUser!.uid)
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        return ChatModel.fromMap(e.data());
+      }).toList();
     });
   }
 }

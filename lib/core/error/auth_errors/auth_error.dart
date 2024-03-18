@@ -111,3 +111,11 @@ class AuthErrorEmailAlreadyInUse extends AuthError {
           dialogText: 'Please choose another email to register with!',
         );
 }
+
+class AuthErrorNoProfile extends AuthError {
+  const AuthErrorNoProfile()
+      : super(
+          dialogTitle: 'emptyProfileDataTitle',
+          dialogText: 'emptyProfileDataText',
+        );
+}

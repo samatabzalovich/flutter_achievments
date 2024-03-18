@@ -3,7 +3,7 @@ import 'package:flutter_achievments/features/task/data/models/task_models/task_a
 import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/permanent_task_entity.dart';
 
-class PermanentTaskModel extends PermanentTaskEntity implements TaskModel{
+class PermanentTaskModel extends PermanentTaskEntity implements TaskModel {
   const PermanentTaskModel(
       {required super.id,
       required super.title,
@@ -17,11 +17,11 @@ class PermanentTaskModel extends PermanentTaskEntity implements TaskModel{
       required super.withoutChecking,
       required super.isPhotoReportIncluded,
       required super.photoReport,
-      required super.repeatOnDays,
       required super.maximumReward,
       required super.isHidddenWhenMax,
       required super.isMandatory,
-      required super.createdAt,});
+      required super.createdAt,
+      required super.taskCompletionNumber});
 
   @override
   Map<String, dynamic> toMap() {
@@ -29,7 +29,7 @@ class PermanentTaskModel extends PermanentTaskEntity implements TaskModel{
       'id': id,
       'title': title,
       'state': state.name,
-      'avatar': ( avatar as TaskAvatarModel).toMap(),
+      'avatar': (avatar as TaskAvatarModel).toMap(),
       'category': (category as CategoryModel).toMap(),
       'reward': reward,
       'parentId': parentId,
@@ -37,12 +37,12 @@ class PermanentTaskModel extends PermanentTaskEntity implements TaskModel{
       'commonTask': commonTask,
       'withoutChecking': withoutChecking,
       'isPhotoReportIncluded': isPhotoReportIncluded,
-      'photoReport': photoReport.toMap(),
-      'repeatOnDays': repeatOnDays,
+      'photoReport': photoReport?.toMap(),
       'maximumReward': maximumReward,
       'isHidddenWhenMax': isHidddenWhenMax,
       'isMandatory': isMandatory,
       'createdAt': createdAt,
+      'taskCompletionNumber': taskCompletionNumber,
     };
   }
 
@@ -60,11 +60,11 @@ class PermanentTaskModel extends PermanentTaskEntity implements TaskModel{
       withoutChecking: map['withoutChecking'],
       isPhotoReportIncluded: map['isPhotoReportIncluded'],
       photoReport: map['photoReport'],
-      repeatOnDays: map['repeatOnDays'],
       maximumReward: map['maximumReward'],
       isHidddenWhenMax: map['isHidddenWhenMax'],
       isMandatory: map['isMandatory'],
       createdAt: map['createdAt'],
+      taskCompletionNumber: map['taskCompletionNumber'],
     );
   }
 }

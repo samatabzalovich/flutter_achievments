@@ -18,7 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initializeDependencies();
-  await initializeFirebaseEmulators();
+  // await initializeFirebaseEmulators();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runApp(

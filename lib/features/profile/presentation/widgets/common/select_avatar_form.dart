@@ -1,13 +1,13 @@
 import 'dart:io' show File;
-import 'package:flutter_achievments/core/common/widgets/avatar_builder.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/widgets/avatar_builder.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
-import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/crop_image_page.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SelectAvatarForm extends StatefulWidget {
@@ -22,7 +22,7 @@ class SelectAvatarForm extends StatefulWidget {
 
 class _SelectAvatarFormState extends State<SelectAvatarForm> {
   final ImagePicker picker = ImagePicker();
-  File? _pickedImage;
+  // File? _pickedImage;
 
   AvatarEntity? _avatar;
   @override
@@ -38,21 +38,21 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
           'или сделай фото',
           fontSize: 16,
         ),
-        const SizedBox(
-          height: 20,
+        SizedBox(
+          height: 20.h,
         ),
         _imagePicker(),
-        const SizedBox(
-          height: 20,
+        SizedBox(
+          height: 20.h,
         ),
         GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: 9,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 24,
+              crossAxisSpacing: MediaQuery.of(context).size.width * 0.1,
+              mainAxisSpacing: 24.h,
             ),
             itemBuilder: (context, index) {
               return GestureDetector(
@@ -77,12 +77,11 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
                         offset: const Offset(0, 4), // Positioning the shadow
                       ),
                     ],
-                    borderRadius: const BorderRadius.all(Radius.circular(
-                        98)), // Radius should be half of the width and height for a perfect circle
+                    borderRadius: const BorderRadius.all(Radius.circular(60)),
                   ),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(
-                        Radius.circular(98)), // Same radius as the Container
+                        Radius.circular(60)), // Same radius as the Container
                     child: Image.asset(
                       'assets/avatars/$index.png',
                       fit: BoxFit.cover,
@@ -103,14 +102,14 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
           onTap: () {
             _pickImage(ImageSource.camera);
           },
-          child: const ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(48)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(48.r)),
             child: ColoredBox(
               color: borderBlueColor,
               child: SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: Icon(
+                  width: 48.w,
+                  height: 48.w,
+                  child: const Icon(
                     Icons.camera_alt,
                     color: Colors.white,
                   )),
@@ -136,14 +135,14 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
           onTap: () {
             _pickImage(ImageSource.gallery);
           },
-          child: const ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(48)),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(48)),
             child: ColoredBox(
               color: borderBlueColor,
               child: SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: Icon(
+                  width: 48.w,
+                  height: 48.w,
+                  child: const Icon(
                     Icons.drive_folder_upload_rounded,
                     color: Colors.white,
                   )),

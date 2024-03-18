@@ -3,7 +3,8 @@ import 'package:flutter_achievments/core/utils/typedefs.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 
 abstract class TaskRepo {
-  ResultFuture<List<TaskEntity>> getTasks();
+  ResultFuture<List<TaskEntity>> getTasks({required DateTime selectedDate,
+    int limit = 50,});
   ResultFuture<void> createTask(TaskEntity task);
   ResultFuture<void> updateTask(TaskEntity task);
   ResultFuture<void> deleteTask(String id);

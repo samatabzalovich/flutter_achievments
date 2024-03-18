@@ -4,6 +4,7 @@ import 'package:flutter_achievments/core/common/widgets/animated_custom_button.d
 import 'package:flutter_achievments/core/common/widgets/custom_button.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_button.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TextAndGreenButtons extends StatelessWidget {
   const TextAndGreenButtons({
@@ -52,7 +53,7 @@ class AnimatedTextAndGreenButtons extends StatelessWidget {
           backgroundColor: Colors.white,
           width: MediaQuery.of(context).size.width /2.3,
           onPressed: textPressed,),
-          AnimatedCustomButton(greenText, controller: controller, width: MediaQuery.of(context).size.width /2.3,height: 48, onPressed: greenPressed,)
+          AnimatedCustomButton(greenText, controller: controller, width: MediaQuery.of(context).size.width /2.3,height: 48.h, onPressed: greenPressed,)
       ],
     );
   }

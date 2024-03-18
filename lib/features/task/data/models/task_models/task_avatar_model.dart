@@ -1,9 +1,9 @@
 import 'dart:ui' show Color;
 
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 
-class TaskAvatarModel extends TaskAvatarEntity {
+class TaskAvatarModel extends FrameAvatarEntity {
   const TaskAvatarModel({
     required super.avatar,
     required super.backgroundColor

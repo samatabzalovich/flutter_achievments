@@ -70,9 +70,10 @@ class TaskRepoImpl implements TaskRepo {
   }
 
   @override
-  ResultFuture<List<TaskModel>> getTasks() async {
+  ResultFuture<List<TaskModel>> getTasks({required DateTime selectedDate,
+    int limit = 50,}) async {
     try {
-      final tasks = await _taskDataSource.getTasks();
+      final tasks = await _taskDataSource.getTasks(selectedDate: selectedDate, limit: limit);
       return Right(tasks);
     } on ApiException catch (e) {
       return Left(ApiFailure.fromException(e));

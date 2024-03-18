@@ -10,7 +10,7 @@ class SendFileMessageUseCase extends UseCaseWithParams<void,SendFileMessageParam
 
   @override
   ResultFuture<void> call(SendFileMessageParams params) async {
-    return _repository.sendFileMessage( message: params.message, filePath: params.filePath, progressSink: params.progressSink);
+    return _repository.sendFileMessage( message: params.message, filePath: params.filePath, progressSink: params.progressSink, chatId: params.chatId);
   }
 }
 
@@ -19,10 +19,12 @@ class SendFileMessageParams extends Equatable {
   final MessageEntity message;
   final String filePath;
   final Sink<double>? progressSink;
+  final String chatId;
   const SendFileMessageParams({
     required this.message,
     required this.filePath,
     this.progressSink,
+    required this.chatId
   });
 
   @override

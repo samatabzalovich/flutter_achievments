@@ -112,6 +112,7 @@ class _ImageCropBodyState extends State<ImageCropBody> {
                 greenPressed: () async {
                   final Image image = await _controller.croppedImage();
                   final Rect rect =  _controller.crop;
+                  
                   if (mounted) {
                     final NetworkAvatarEntity avatar = NetworkAvatarEntity(widget.image.path, crop: rect, image: image);
                     Navigator.of(context).pop(avatar);

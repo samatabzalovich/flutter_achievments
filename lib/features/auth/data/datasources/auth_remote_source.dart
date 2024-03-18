@@ -2,12 +2,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
-import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
-
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/error/auth_errors/auth_error.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/child_model.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/parent_model.dart';
+import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
 
 abstract class AuthRemoteSource {
   Future<UserModel> signUpWithEmailAndPassword(
@@ -47,6 +46,9 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
     } on FirebaseAuthException catch (e) {
       throw AuthError.from(e);
     }
+    on AuthError {
+      rethrow;
+    }
   }
 
   @override
@@ -71,10 +73,17 @@ class AuthRemoteSourceImpl implements AuthRemoteSource {
       });
       if (userType == UserType.parent) {
         return ParentModel(
-            id: credential.user!.uid, email: email, userType: userType,);
+            id: credential.user!.uid,
+            email: email,
+            userType: userType,
+            createdAt: DateTime.now());
       } else {
         return ChildModel(
-            id: credential.user!.uid, email: email, userType: userType, birthDate: DateTime.now());
+            id: credential.user!.uid,
+            email: email,
+            userType: userType,
+            birthDate: DateTime.now(),
+            createdAt: DateTime.now());
       }
     } on FirebaseAuthException catch (e) {
       throw AuthError.from(e);

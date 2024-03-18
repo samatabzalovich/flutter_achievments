@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/features/app/data/shared_models/user_model.dart';
@@ -16,6 +17,7 @@ class ChildModel extends ChildEntity implements UserModel{
     String? parentId,
     bool withoutPhone =false,
     required DateTime birthDate,
+    required DateTime createdAt,
   }) : super(
           id: id,
           avatar: avatarEntity,
@@ -26,6 +28,7 @@ class ChildModel extends ChildEntity implements UserModel{
           parentId: parentId,
           withoutPhone: withoutPhone,
           birthDate: birthDate,
+          createdAt: createdAt,
         );
   @override
   Map<String, dynamic> toMap() {
@@ -39,11 +42,11 @@ class ChildModel extends ChildEntity implements UserModel{
       'parentId': parentId,
       'withoutPhone': withoutPhone,
       'birthDate': birthDate.toIso8601String(),
+      'createdAt': FieldValue.serverTimestamp(),
     };
   }
 
   static ChildModel fromMap(Map<String, dynamic> map, String uid) {
-    
     return ChildModel(
       id: uid,
       name: map['name'],
@@ -54,6 +57,7 @@ class ChildModel extends ChildEntity implements UserModel{
       parentId: map['parentId'],
       withoutPhone: map['withoutPhone'],
       birthDate: DateTime.parse(map['birthDate']),
+      createdAt:DateTime.fromMicrosecondsSinceEpoch((map['createdAt'] as Timestamp).microsecondsSinceEpoch).toLocal() ,
     );
   }
 
@@ -68,6 +72,7 @@ class ChildModel extends ChildEntity implements UserModel{
       parentId: entity.parentId ?? '',
       withoutPhone: entity.withoutPhone,
       birthDate: entity.birthDate,
+      createdAt: entity.createdAt,
     );
   }
 

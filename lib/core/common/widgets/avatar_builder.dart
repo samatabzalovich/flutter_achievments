@@ -1,8 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/enums/avatar_type.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'dart:math' as math;
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AvatarBuilder extends StatelessWidget {
   const AvatarBuilder(this._userName, {this.width = 98,this.avatarEntity, super.key});
@@ -16,8 +19,8 @@ class AvatarBuilder extends StatelessWidget {
       child: ColoredBox(
         color: getRandomColor(),
         child: SizedBox(
-          width: width,
-          height: width,
+          width: ScreenUtil().setWidth(width),
+          height: ScreenUtil().setWidth(width),
           child: Center(
             child: avatarEntity == null || avatarEntity is NoneAvatarEntity
             ? CustomText(

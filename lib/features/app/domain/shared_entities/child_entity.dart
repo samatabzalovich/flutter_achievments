@@ -19,6 +19,7 @@ class ChildEntity extends UserEntity {
     this.parents,
     Role? role,
     required this.birthDate,
+    required DateTime createdAt,
   }) : super(
           id: id,
           name: name,
@@ -26,6 +27,7 @@ class ChildEntity extends UserEntity {
           avatar: avatar,
           userType: userType,
           role: role,
+          createdAt: createdAt,
         );
 
   @override
@@ -47,6 +49,7 @@ class ChildEntity extends UserEntity {
     bool? withoutPhone,
     List<ParentEntity>? parents,
     DateTime? birthDate,
+    DateTime? createdAt,
   }) {
     return ChildEntity(
       id: id ?? this.id,
@@ -59,6 +62,7 @@ class ChildEntity extends UserEntity {
       withoutPhone: withoutPhone ?? this.withoutPhone,
       parents: parents ?? this.parents,
       birthDate: birthDate ?? this.birthDate,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 

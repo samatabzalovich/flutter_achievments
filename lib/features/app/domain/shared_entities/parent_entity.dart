@@ -16,6 +16,7 @@ class ParentEntity extends UserEntity {
     Role? role,
     this.isRoleShown = false,
     this.children,
+    required DateTime createdAt,
   }) : super(
           id: id,
           name: name,
@@ -23,6 +24,7 @@ class ParentEntity extends UserEntity {
           avatar: avatarEntity,
           userType: userType,
           role: role,
+          createdAt: createdAt
         );
 
   @override
@@ -41,7 +43,8 @@ class ParentEntity extends UserEntity {
       UserType? userType,
       Role? role,
       bool? isRoleShown,
-      List<ChildEntity>? children
+      List<ChildEntity>? children,
+      DateTime? createdAt,
       }) {
     return ParentEntity(
       id: id ?? this.id,
@@ -52,8 +55,19 @@ class ParentEntity extends UserEntity {
       role: role ?? this.role,
       isRoleShown: isRoleShown ?? this.isRoleShown,
       children: children ?? this.children,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
+  static ParentEntity empty() {
+    return ParentEntity(
+      id: '',
+      name: '',
+      email: '',
+      avatarEntity: const NoneAvatarEntity(),
+      userType: UserType.parent,
+      createdAt: DateTime.now(),
+    );
+  }
 
 }

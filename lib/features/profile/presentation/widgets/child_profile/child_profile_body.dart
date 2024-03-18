@@ -155,6 +155,7 @@ class _ChildProfileBodyState extends State<ChildProfileBody>
                     email: '',
                     userType: UserType.child,
                     birthDate: dateOfBirth,
+                    createdAt: DateTime.now(),
                     name: name,
                     withoutPhone: isKidWithoutPhone,
                     parentId: Provider.of<UserProvider>(context, listen: false)

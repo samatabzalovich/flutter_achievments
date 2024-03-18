@@ -1,9 +1,9 @@
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-import 'package:flutter_achievments/features/task/data/models/task_models/task_avatar_model.dart';
 import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 
 abstract class RemoteTaskDataSource {
-  Future<List<TaskModel>> getTasks();
+  Future<List<TaskModel>> getTasks({required DateTime selectedDate,
+    int limit = 50,});
   Future<void> createTask(TaskModel task);
   Future<void> updateTask(TaskModel task);
   Future<void> deleteTask(String id);
