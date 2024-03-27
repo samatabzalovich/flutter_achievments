@@ -69,7 +69,7 @@ class OneTimeTaskEntity extends TaskEntity {
         categoryDescription: 'Category description',
       ),
       deadLine: DateTime.now(),
-      startTime: DateTime.now(),
+      startTime: DateTime.now().subtract(const Duration(days: 2)),
       reward: 10,
       parentId: '1',
       children: const [

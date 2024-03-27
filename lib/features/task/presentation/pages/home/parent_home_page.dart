@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
-import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
+import 'package:flutter_achievments/core/services/get_it.dart';
+import 'package:flutter_achievments/core/utils/screen_utilities.dart';
+import 'package:flutter_achievments/features/task/presentation/provider/page_index.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/animated_navbar.dart';
+import 'package:flutter_achievments/features/task/presentation/widgets/common/bottom_nav_bar.dart';
+import 'package:flutter_achievments/features/task/presentation/widgets/common/floating_action_button.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/modal_bottom_sheet.dart';
+import 'package:flutter_achievments/features/task/presentation/widgets/common/tab_bottom_sheet_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class ParentHomePage extends StatefulWidget {
@@ -24,43 +29,64 @@ class _ParentHomePageState extends State<ParentHomePage> {
 
   @override
   void dispose() {
-    
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final parent = Provider.of<UserProvider>(context, listen: true).currentUser
-        as ParentEntity;
-    final maxChildSize = _getMaxChildSize(context);
-    final minChildSize = _getMinChildSize(context);
+    final maxChildSize = sl<ScreenUtilities>(). getMaxChildSize(context);
+    final minChildSize = sl<ScreenUtilities>().getMinChildSize(context);
     return Scaffold(
-        body: Stack(
-      children: [
-        AnimatedNavbar(
-          controller: _controller,
-          maxChildSize: maxChildSize,
-          minChildSize: minChildSize,
-        ),
-        HomeBottomSheet(
-          controller: _controller,
-          maxChildSize: maxChildSize,
-          minChildSize: minChildSize,
-        )
-      ],
-    ));
+      extendBody: true,
+      floatingActionButton: const CustomFloatingActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: Stack(
+        children: [
+          AnimatedNavbar(
+            controller: _controller,
+            maxChildSize: maxChildSize,
+            minChildSize: minChildSize,
+          ),
+          CustomBottomSheet(
+            controller: _controller,
+            maxChildSize: maxChildSize,
+            minChildSize: minChildSize,
+            builder: (context, scrollController) {
+              return TabBottomSheetWidgets(
+                controller: _controller,
+                minChildSize: minChildSize,
+                maxChildSize: maxChildSize,
+                scrollController: scrollController,
+              );
+            },
+          ),
+
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: 110.h,
+                width: double.infinity,
+                child: const DecoratedBox(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 10,
+                      blurRadius: 50,
+                      offset: Offset(0, 0),
+                    ),
+                  ]),
+                ),
+              ))
+        ],
+      ),
+      bottomNavigationBar: CustomBottomNavBar(onTabSelected: (index) {
+        Provider.of<PageIndexProvider>(context, listen: false).setPageNumber(index);
+      }),
+    );
   }
 
-  double _getMaxChildSize(BuildContext context) {
-    var isTablet = MediaQuery.of(context).size.shortestSide > 600;
-    return isTablet ? 0.91 : 0.88; // Example adjustment, customize as needed
-  }
-
-  double _getMinChildSize(BuildContext context) {
-    var isTablet = MediaQuery.of(context).size.shortestSide > 600;
-    return isTablet ? 0.89 : 0.84; // Example adjustment, customize as needed
-  }
+  
 }
 //0.84 0.87990
 

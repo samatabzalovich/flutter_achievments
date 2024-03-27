@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_achievments/core/common/widgets/cropped_image.dart';
 import 'package:flutter_achievments/core/enums/avatar_type.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
@@ -8,14 +8,15 @@ import 'dart:math' as math;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AvatarBuilder extends StatelessWidget {
-  const AvatarBuilder(this._userName, {this.width = 98,this.avatarEntity, super.key});
+  const AvatarBuilder(this._userName,
+      {this.width = 98, this.avatarEntity, super.key});
   final AvatarEntity? avatarEntity;
   final double width;
   final String _userName;
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius:  BorderRadius.all(Radius.circular(width)),
+      borderRadius: BorderRadius.all(Radius.circular(width)),
       child: ColoredBox(
         color: getRandomColor(),
         child: SizedBox(
@@ -23,7 +24,7 @@ class AvatarBuilder extends StatelessWidget {
           height: ScreenUtil().setWidth(width),
           child: Center(
             child: avatarEntity == null || avatarEntity is NoneAvatarEntity
-            ? CustomText(
+                ? CustomText(
                     formatName(_userName),
                     fontSize: 20,
                   )
@@ -62,16 +63,14 @@ class AvatarBuilder extends StatelessWidget {
         return Image.asset(
           avatar.photoUrl,
           fit: BoxFit.cover,
+          
         );
       case AvatarType.network:
         if (avatar is NetworkAvatarEntity && avatar.image != null) {
           return avatar.image!;
-        } 
-          return Image.network(
-            avatar.photoUrl,
-            fit: BoxFit.cover,
-          );
-        
+        }
+        return CroppedImage(avatar: avatar);
+
       default:
         return Image.asset(
           avatar.photoUrl,

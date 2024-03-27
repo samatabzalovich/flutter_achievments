@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_achievments/core/utils/image_utils.dart';
+import 'package:flutter_achievments/core/utils/screen_utilities.dart';
 import 'package:flutter_achievments/features/auth/data/datasources/auth_remote_source.dart';
 import 'package:flutter_achievments/features/auth/data/repositories/auth_repo_impl.dart';
 import 'package:flutter_achievments/features/auth/domain/repositories/auth_repo.dart';
@@ -23,5 +25,6 @@ import 'package:flutter_achievments/features/splash/domain/repositories/splash_r
 import 'package:flutter_achievments/features/splash/domain/usecases/auth_state.dart';
 import 'package:flutter_achievments/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'get_it.main.dart';

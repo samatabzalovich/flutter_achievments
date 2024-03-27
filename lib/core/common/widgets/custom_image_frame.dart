@@ -15,16 +15,17 @@ class CustomImageFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomHexagon(
-      size: 110.w,
+      size: 110.h,
       backgroundColor: tileAvatar.backgroundColor,
       child: RepaintBoundary(
         child: CustomHexagon(
-          size: 90.w,
+          size: 90.h,
           backgroundColor: tileAvatar.backgroundColor,
-          child: CroppedImage(tileAvatar: tileAvatar),
+          child: CroppedImage(
+            avatar: tileAvatar.avatar,
+          ),
         ),
       ),
     );
   }
 }
-

@@ -6,7 +6,9 @@ import 'package:flutter_achievments/core/common/widgets/avatar_builder.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
-import 'package:flutter_achievments/features/profile/presentation/pages/crop_image_page.dart';
+import 'package:flutter_achievments/core/common/pages/crop_image_page.dart';
+import 'package:flutter_achievments/core/services/get_it.dart';
+import 'package:flutter_achievments/core/utils/image_utils.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -21,7 +23,6 @@ class SelectAvatarForm extends StatefulWidget {
 }
 
 class _SelectAvatarFormState extends State<SelectAvatarForm> {
-  final ImagePicker picker = ImagePicker();
   // File? _pickedImage;
 
   AvatarEntity? _avatar;
@@ -121,7 +122,7 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
         ),
         GestureDetector(
             onTap: () {
-              _showImagePicker(context);
+              sl<ImageUtils>(). showImagePicker(context, pickImageFunc: _pickImage);
             },
             child: AvatarBuilder(
               widget.userName,
@@ -153,68 +154,10 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
     );
   }
 
-  void _showImagePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  child: SizedBox(
-                    height: 4,
-                    width: 80,
-                    child: ColoredBox(
-                      color: borderBlueColor,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const CustomText.darkBlueTitle(
-                  'Выберите источник',
-                ),
-                ListTile(
-                    leading: const Icon(Icons.photo_library),
-                    title: const CustomText.darkBlueTitle(
-                      'Галлерея',
-                      fontSize: 16,
-                    ),
-                    onTap: () {
-                      _pickImage(ImageSource.gallery);
-                      Navigator.of(context).pop();
-                    }),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera),
-                  title: const CustomText.darkBlueTitle(
-                    'Камера',
-                    fontSize: 16,
-                  ),
-                  onTap: () {
-                    _pickImage(ImageSource.camera);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  
 
   Future _pickImage(ImageSource source) async {
-    final pickedFile = await picker.pickImage(source: source);
+    final pickedFile = await sl<ImageUtils>().pickImage(source);
 
     if (pickedFile != null) {
       await _cropImage(File(pickedFile.path));
@@ -222,14 +165,7 @@ class _SelectAvatarFormState extends State<SelectAvatarForm> {
   }
 
   Future<void> _cropImage(File pickedFile) async {
-    NetworkAvatarEntity? networkAvatar = await Navigator.push(
-      context,
-      MyCustomRouteFadeTransition<NetworkAvatarEntity>(
-        route: ImageCropPage(
-          image: pickedFile,
-        ),
-      ),
-    );
+    final networkAvatar = await sl<ImageUtils>().cropImage(pickedFile, context);
     if (networkAvatar != null) {
       setState(() {
         _avatar = networkAvatar;

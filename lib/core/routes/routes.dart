@@ -61,12 +61,22 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
     // Home Routes
     case ParentHomePage.routeName:
       return MyCustomRouteFadeTransition(
-        route: const ParentHomePage(),
+        route: ChangeNotifierProvider(
+          create: (_) => PageIndexProvider(),
+          child: const ParentHomePage()),
       );
     case ChildHomePage.routeName:
       return MyCustomRouteFadeTransition(
         route: const ChildHomePage(),
       );
+      //create task pages
+    case ChooseCategoryTaskPage.routeName:
+      return MyCustomRouteFadeTransition(route: const ChooseCategoryTaskPage());
+case CreateTaskPage.routeName:
+final args = settings.arguments as TaskType;
+      return MyCustomRouteSlideTransition(route:  CreateTaskPage(
+        selectedType: args,
+      ));
     default:
       return MyCustomRouteFadeTransition(route: const RouteNotFoundPage());
   }

@@ -5,12 +5,15 @@ final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
   // Firebase
   sl
-  
         // dependencies
         ..registerLazySingleton(() => FirebaseAuth.instance)
         ..registerLazySingleton(() => FirebaseFirestore.instance)
         ..registerLazySingleton(() => FirebaseStorage.instance)
         ..registerLazySingleton(() => FirebaseFunctions.instance)
+        ..registerLazySingleton(() => ImagePicker())
+        // utils 
+        ..registerLazySingleton(() => ScreenUtilities())
+        ..registerLazySingleton(() => ImageUtils(sl<ImagePicker>()))
         //data sources
         .. registerLazySingleton<AuthRemoteSource>(() => AuthRemoteSourceImpl(sl(), sl()))
         ..registerLazySingleton<SplashDataSource>(() => SplashDataSourceImpl(sl(), sl()))

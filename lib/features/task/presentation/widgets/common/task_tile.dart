@@ -1,9 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_image_frame.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_no_tr.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
+import 'package:flutter_achievments/core/enums/task_type.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/one_time_task_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/repeatable_task_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
@@ -45,6 +49,7 @@ class TaskTile extends StatelessWidget {
                   child: LayoutBuilder(builder: (context, constraints) {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         SizedBox(
                           width: constraints.maxWidth * 0.3,
@@ -53,48 +58,41 @@ class TaskTile extends StatelessWidget {
                             child: CustomImageFrame(tileAvatar: task.avatar),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8.h,
-                            horizontal: 10.w,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextNoTr.darkBlueTitle(
-                                task.title,
-                                fontSize: 16,
-                              ),
-                              CustomTextNoTr.darkBlueTitle(
-                                task.title,
-                                fontSize: 16,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  _buildTaskStateWidget(),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      CustomTextNoTr.darkBlueTitle(
-                                        '+${task.reward.toString()}',
-                                        fontSize: 16,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      SvgPicture.asset('assets/icons/gem.svg',
-                                          width: 20.w, height: 25.h)
-                                    ],
-                                  )
-                                ],
-                              )
-                            ],
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 8.h,
+                              horizontal: 10.w,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildTaskDeadlineBlocks(),
+                                CustomTextNoTr.darkBlueTitle(
+                                  task.title,
+                                  fontSize: 16,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    _buildTaskStateWidget(),
+                                    Row(
+                                      children: [
+                                        CustomTextNoTr.darkBlueTitle(
+                                          '+${task.reward.toString()}',
+                                          fontSize: 16,
+                                        ),
+                                        SvgPicture.asset('assets/icons/gem.svg',
+                                            width: 20.w, height: 25.h)
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -112,58 +110,244 @@ class TaskTile extends StatelessWidget {
     if (task is RepeatableTaskEntity) {
       // taskSkippedWidget =
     }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: 110.w,
-          height: 25.h,
-          child: Builder(builder: (context) {
-            String stateName = task.state.name;
-            late Color backGroundColor;
-            late Color textColor;
-            if (task.createdAt.day == DateTime.now().day) {
+    return SizedBox(
+      width: 110.w,
+      height: 25.h,
+      child: Builder(builder: (context) {
+        String stateName = task.state.name;
+        late Color backGroundColor;
+        late Color textColor;
+        if (task.createdAt.day == DateTime.now().day) {
+          backGroundColor = greenButtonGradient2;
+          textColor = Colors.white;
+          stateName = LocaleKeys.newTaskState;
+        } else {
+          switch (task.state) {
+            case TaskStateEnum.active:
+              backGroundColor = scaffoldBackground;
+              textColor = greyColor;
+            case TaskStateEnum.refused:
+            case TaskStateEnum.redo:
+            case TaskStateEnum.rejected:
+              backGroundColor = scaffoldBackground;
+              textColor = redColor;
+            case TaskStateEnum.completed:
+              backGroundColor = lightBlue;
+              textColor = Colors.white;
+            case TaskStateEnum.suggested:
               backGroundColor = greenButtonGradient2;
               textColor = Colors.white;
-              stateName = LocaleKeys.newTaskState;
-            } else {
-              switch (task.state) {
-                case TaskStateEnum.active:
-                  backGroundColor = scaffoldBackground;
-                  textColor = greyColor;
-                case TaskStateEnum.refused:
-                case TaskStateEnum.redo:
-                case TaskStateEnum.rejected:
-                  backGroundColor = scaffoldBackground;
-                  textColor = redColor;
-                case TaskStateEnum.completed:
-                  backGroundColor = lightBlue;
-                  textColor = Colors.white;
-                case TaskStateEnum.suggested:
-                  backGroundColor = greenButtonGradient2;
-                  textColor = Colors.white;
-                case TaskStateEnum.pending:
-                  backGroundColor = scaffoldBackground;
-                  textColor = gradientColor2;
-              }
-            }
-            return DecoratedBox(
-              decoration: BoxDecoration(
-                color: backGroundColor,
-                borderRadius: BorderRadius.circular(5),
+            case TaskStateEnum.pending:
+              backGroundColor = scaffoldBackground;
+              textColor = gradientColor2;
+          }
+        }
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: backGroundColor,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Center(
+            child: CustomText(
+              stateName,
+              fontSize: 12,
+              color: textColor,
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildTaskDeadlineBlocks() {
+    Color backGroundColor;
+    Color textColor;
+    if (task.createdAt.day == DateTime.now().day) {
+      backGroundColor = greenTileBackground;
+      textColor = Colors.white;
+    } else {
+      backGroundColor = lightBlueBackground;
+      textColor = lightBlue2;
+    }
+    switch (task.type) {
+      case TaskType.repeatable:
+        return _buildRepeatableTaskDeadlineBlock(
+          backGroundColor: backGroundColor,
+          textColor: textColor,
+        );
+      case TaskType.permanent:
+        return _buildPermanentTaskDeadlineBlock(
+          textColor,
+        );
+      case TaskType.oneTime:
+        return _buildOneTimeTaskDeadlineBlock(
+          textColor,
+        );
+    }
+  }
+
+  Widget _buildRepeatableTaskDeadlineBlock({required Color backGroundColor,required Color textColor}) {
+    final taskEntity = task as RepeatableTaskEntity;
+    return _buildDeadlineBlock(
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomText(
+              _getTimeOfTheDay(
+                taskEntity.startTime.hour,
               ),
-              child: Center(
-                child: CustomText(
-                  stateName,
-                  fontSize: 12,
-                  color: textColor,
+              color: textColor,
+              fontSize: 14.sp,
+            ),
+            CustomTextNoTr.darkBlueTitle(
+              DateFormat('dd.yy').format(taskEntity.startTime),
+              fontSize: 14.sp,
+              color: textColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getTimeOfTheDay(int hour) {
+    if (hour < 12) {
+      return LocaleKeys.morning;
+    } else if (hour < 18) {
+      return LocaleKeys.afternoon;
+    } else {
+      return LocaleKeys.evening;
+    }
+  }
+
+  Widget _buildPermanentTaskDeadlineBlock(Color color) {
+    return _buildDeadlineBlock(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 8,
+          ),
+          Icon(
+            CupertinoIcons.loop,
+            color: color,
+            size: 25.h,
+          ),
+          SizedBox(
+            width: 8,
+          )
+        ],
+      ),
+    );
+  }
+
+  DecoratedBox _buildDeadlineBlock(Widget child) {
+    Color backGroundColor;
+    if (task.createdAt.day == DateTime.now().day) {
+      backGroundColor = greenButtonGradient2;
+    } else {
+      backGroundColor = lightBlueBackground;
+    }
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: backGroundColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: SizedBox(
+        height: 40.h,
+        child: child,
+      ),
+    );
+  }
+
+  Widget _buildOneTimeTaskDeadlineBlock(Color color) {
+    final Widget child;
+    final taskEntity = task as OneTimeTaskEntity;
+    switch (taskEntity.deadLine.difference(taskEntity.startTime).inDays) {
+      case 0:
+        child = Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomTextNoTr.darkBlueTitle(
+                '${DateFormat('HH:mm').format(taskEntity.startTime)}-${DateFormat('HH:mm').format(taskEntity.deadLine)}',
+                fontSize: 14.sp,
+                color: color,
+              ),
+              CustomTextNoTr.darkBlueTitle(
+                DateFormat('dd.yy').format(taskEntity.startTime),
+                fontSize: 14.sp,
+                color: color,
+              ),
+            ],
+          ),
+        );
+
+        break;
+      default:
+        child = Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText.darkBlueTitle(
+                    _getTimeOfTheDay(
+                      taskEntity.startTime.hour,
+                    ),
+                    fontSize: 14.sp,
+                    color: color,
+                  ),
+                  CustomTextNoTr.darkBlueTitle(
+                    DateFormat('dd.yy').format(taskEntity.deadLine),
+                    fontSize: 14.sp,
+                    color: color,
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child:  VerticalDivider(
+                  color: color,
+                  width: 1,
+                  thickness: 1,
                 ),
               ),
-            );
-          }),
-        ),
-      ],
-    );
+              SizedBox(
+                width: 8.w,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText.darkBlueTitle(
+                    _getTimeOfTheDay(
+                      taskEntity.deadLine.hour,
+                    ),
+                    color: color,
+                    fontSize: 14.sp,
+                  ),
+                  CustomTextNoTr.darkBlueTitle(
+                    DateFormat('dd.yy').format(taskEntity.deadLine),
+                    fontSize: 14.sp,
+                    color: color,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+    }
+
+    return _buildDeadlineBlock(child);
   }
 }
 

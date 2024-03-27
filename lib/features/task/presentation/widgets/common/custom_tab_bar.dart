@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:flutter_achievments/core/services/get_it.dart';
+import 'package:flutter_achievments/core/utils/screen_utilities.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -20,6 +22,14 @@ final DraggableScrollableController draggableScrollableController;
 class _CustomTabbarState extends State<CustomTabbar> {
   double _opacityTabPicker = 1.0;
   double progress = 1;
+
+  @override
+  void setState(VoidCallback fn) {
+    
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -71,7 +81,7 @@ class _CustomTabbarState extends State<CustomTabbar> {
                       padding: EdgeInsets.zero,
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontSize: ScreenUtil().setSp(16 * customScaleFactor(context)),
+                          fontSize: ScreenUtil().setSp(16 * sl<ScreenUtilities>().customScaleFactor(context)),
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           height: 1),
@@ -109,8 +119,5 @@ class _CustomTabbarState extends State<CustomTabbar> {
     );
   }
 
-  double customScaleFactor(BuildContext context) {
-    var isTablet = MediaQuery.of(context).size.shortestSide > 600;
-    return isTablet ? 0.6 : 1.0; // Example adjustment, customize as needed
-  }
+  
 }

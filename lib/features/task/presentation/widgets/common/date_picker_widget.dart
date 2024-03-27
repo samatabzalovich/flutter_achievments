@@ -45,6 +45,13 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
     });
   }
 
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   DateTime selectedDate = DateTime.now();
   @override
   Widget build(BuildContext context) {

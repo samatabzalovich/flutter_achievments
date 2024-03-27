@@ -1,50 +1,92 @@
 import 'dart:io';
-import 'dart:ui';
 
-import 'package:flutter/services.dart' show Uint8List;
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
+import 'package:flutter_achievments/core/common/pages/crop_image_page.dart';
+import 'package:image_picker/image_picker.dart';
+
 class ImageUtils {
-  Future<Image> loadImageIntoBytes(File image) async {
-  var lst = await image.readAsBytes();
-  var codec = await instantiateImageCodec(lst);
-  var nextFrame = await codec.getNextFrame();
-  return nextFrame.image;
-}
+  final ImagePicker picker;
+  const ImageUtils(this.picker);
+  Future<File?> pickImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    return pickedFile == null ? null : File(pickedFile.path);
+  }
 
-Future<File> cropImage(Image image, Rect cropRect) async {
-  var pictureRecorder = PictureRecorder();
-  Canvas canvas = Canvas(pictureRecorder);
-  Paint paint = Paint();
+  Future<NetworkAvatarEntity?> cropImage(
+      File pickedFile, BuildContext context) async {
+    NetworkAvatarEntity? networkAvatar = await Navigator.push(
+      context,
+      MyCustomRouteFadeTransition<NetworkAvatarEntity>(
+        route: ImageCropPage(
+          image: pickedFile,
+        ),
+      ),
+    );
+    return networkAvatar;
+  }
 
-  // Draw the part of the image that we want onto the canvas
-  canvas.drawImageRect(
-    image,
-    cropRect,
-    Rect.fromPoints(Offset.zero, Offset(cropRect.width, cropRect.height)),
-    paint,
-  );
-
-  // Convert the canvas to an image
-  final img = await pictureRecorder.endRecording().toImage(
-    cropRect.width.floor(),
-    cropRect.height.floor(),
-  );
-
-  return convertImageToFile(img);
-}
-Future<File> convertImageToFile(Image image) async {
-  // Convert ui.Image to byte data
-  final byteData = await image.toByteData(format: ImageByteFormat.png);
-  final Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-  // Get a temporary directory
-  final tempDir = await getTemporaryDirectory();
-  final file = File('${tempDir.path}/image.png');
-
-  // Write the bytes to a file
-  await file.writeAsBytes(pngBytes);
-  return file;
-}
-
-
+  void showImagePicker(BuildContext context,
+      {required Function(ImageSource) pickImageFunc}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                const ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  child: SizedBox(
+                    height: 4,
+                    width: 80,
+                    child: ColoredBox(
+                      color: borderBlueColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const CustomText.darkBlueTitle(
+                  'Выберите источник',
+                ),
+                ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const CustomText.darkBlueTitle(
+                      'Галлерея',
+                      fontSize: 16,
+                    ),
+                    onTap: () {
+                      pickImageFunc(ImageSource.gallery);
+                      Navigator.of(context).pop();
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: const CustomText.darkBlueTitle(
+                    'Камера',
+                    fontSize: 16,
+                  ),
+                  onTap: () {
+                    pickImageFunc(ImageSource.camera);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

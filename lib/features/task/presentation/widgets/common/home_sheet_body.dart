@@ -6,8 +6,8 @@ import 'package:flutter_achievments/features/task/presentation/widgets/common/cu
 import 'package:flutter_achievments/features/task/presentation/widgets/common/date_picker_widget.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/task_tile.dart';
 
-class SheetBody extends StatelessWidget {
-  const SheetBody(
+class HomeSheetBody extends StatelessWidget {
+  const HomeSheetBody(
       {super.key,
       required this.controller,
       required this.draggableScrollableController,
@@ -24,11 +24,11 @@ class SheetBody extends StatelessWidget {
       length: 2,
       child: Column(
         children: [
-           CustomTabbar(
+          CustomTabbar(
             draggableScrollableController: draggableScrollableController,
             minChildSize: minChildSize,
             maxChildSize: maxChildSize,
-           ),
+          ),
           
           Expanded(
             child: TabBarView(

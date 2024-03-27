@@ -19,7 +19,7 @@ class CustomNavBar<T> extends StatelessWidget implements PreferredSizeWidget {
     return Container(
         decoration: const BoxDecoration(
           gradient: RadialGradient(
-            radius: 1,
+            radius: 6,
             center: Alignment.topCenter,
             focalRadius: 0,
             colors: [
