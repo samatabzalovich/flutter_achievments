@@ -94,7 +94,7 @@
    "doInChecking": "Do",
    "deadline": "Deadline",
    "photoReport": "Photo report",
-   "hereWillBePhotoReport": "The photo report will be here",
+   "hereWillBePhotoReport": "Здесь будет\nфотоотчет",
    "taskDone": "Task done",
    "taskSkipped": "Task skipped",
    "taskRejected": "Task rejected",
@@ -191,5 +191,11 @@
    "week4day": "thu",
    "week5day": "fri",
    "week6day": "sat",
-   "week7day": "sun"
+   "week7day": "sun",
+
+   "toCurrent": "В текущие",
+   "ok": "Ок",
+   "photoReportExplanation": "Фотоотчет - это дополнительный способ подтверждения выполнения задачи. Пользователь должен сделать фотографию, демонстрирующую выполнение задачи, и отправить ее для проверки. Это помогает контролировать выполнение задач.",
+
+   "outOf": "out of"
 }

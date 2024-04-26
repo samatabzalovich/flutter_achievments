@@ -5,7 +5,7 @@ import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_no_tr.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
-import 'package:flutter_achievments/features/profile/presentation/widgets/common/custom_switch_description.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_switch_description.dart';
 import 'package:flutter_achievments/features/profile/presentation/widgets/common/show_modal_sheet.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/create_page_widgets/choose_repeated_time.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
@@ -45,9 +45,12 @@ class _TaskPrefBodyState extends State<TaskPrefBody> {
       children: [
         const CustomText.darkBlueTitle(LocaleKeys.taskPreferenses),
         if (widget.taskType == TaskType.repeatable)
-          ChooseRepeatedTime(onRepeatedDaysSelected: (days) {
+          ChooseRepeatedTime(onRepeatedDaysSelected: (daysVal) {
+            
+              days = daysVal;
+          
             widget.onTaskPrefSelected(deadline, startTime, dependsOnVolume,
-                points, maxPoints, isHiddenWhenMax, days);
+                points, maxPoints, isHiddenWhenMax, daysVal);
           }),
         if (widget.taskType == TaskType.oneTime)
           Column(
@@ -470,6 +473,7 @@ class _TaskPrefBodyState extends State<TaskPrefBody> {
     final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      
       initialEntryMode: TimePickerEntryMode.dial,
     );
     if (picked != null) {
@@ -480,8 +484,8 @@ class _TaskPrefBodyState extends State<TaskPrefBody> {
       } else {
         if (mounted) {
           await showErrorDialog(
-              dialogTitle: LocaleKeys.error.tr(),
-              dialogText: LocaleKeys.errorTimeShouldBeAfterCurrentTime.tr(),
+              dialogTitle: LocaleKeys.error,
+              dialogText: LocaleKeys.errorTimeShouldBeAfterCurrentTime,
               context: context);
         }
       }

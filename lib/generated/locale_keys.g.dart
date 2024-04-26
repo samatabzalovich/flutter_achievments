@@ -193,5 +193,9 @@ abstract class  LocaleKeys {
   static const week5day = 'week5day';
   static const week6day = 'week6day';
   static const week7day = 'week7day';
+  static const toCurrent = 'toCurrent';
+  static const ok = 'ok';
+  static const photoReportExplanation = 'photoReportExplanation';
+  static const outOf = 'outOf';
 
 }

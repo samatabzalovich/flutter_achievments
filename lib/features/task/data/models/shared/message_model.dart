@@ -1,46 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_achievments/core/enums/message_type.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/message.dart';
 
 class MessageModel extends MessageEntity {
   const MessageModel({
-    required String senderId,
-    required String recieverId,
-    required String text,
-    required MessageEnum type,
-    required DateTime timeSent,
-    required String messageId,
-    required bool isSeen,
-    required String repliedMessage,
-    required String repliedTo,
-    required MessageEnum repliedMessageType,
-    required TaskStateMessageType taskStateMessageType,
-  }) : super(
-          senderId: senderId,
-          recieverId: recieverId,
-          text: text,
-          type: type,
-          timeSent: timeSent,
-          messageId: messageId,
-          isSeen: isSeen,
-          repliedMessage: repliedMessage,
-          repliedTo: repliedTo,
-          repliedMessageType: repliedMessageType,
-          taskStateMessageType: taskStateMessageType,
-        );
+    required super.senderId,
+    required super.recieverId,
+    required super.text,
+    required super.type,
+    required super.timeSent,
+    required super.messageId,
+    required super.isSeen,
+    required super.repliedMessage,
+    required super.repliedTo,
+    required super.repliedMessageType,
+    required super.taskStateMessageType,
+  });
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
       senderId: map['senderId'],
       recieverId: map['recieverId'],
       text: map['text'],
-      type: map['type'],
-      timeSent: map['timeSent'],
+      type: (map['type'] as String).toMessageEnum(),
+      timeSent: (map['timeSent'] as Timestamp).toDate(),
       messageId: map['messageId'],
       isSeen: map['isSeen'],
       repliedMessage: map['repliedMessage'],
       repliedTo: map['repliedTo'],
-      repliedMessageType: map['repliedMessageType'],
-      taskStateMessageType: map['taskStateMessageType'],
+      repliedMessageType: (map['repliedMessageType'] as String ).toMessageEnum(),
+      taskStateMessageType: TaskStateMessageType.fromString((map['taskStateMessageType'] as String)),
     );
   }
 
@@ -49,14 +38,14 @@ class MessageModel extends MessageEntity {
       'senderId': senderId,
       'recieverId': recieverId,
       'text': text,
-      'type': type,
-      'timeSent': timeSent,
+      'type': type.name,
+      'timeSent': FieldValue.serverTimestamp(),
       'messageId': messageId,
       'isSeen': isSeen,
       'repliedMessage': repliedMessage,
       'repliedTo': repliedTo,
-      'repliedMessageType': repliedMessageType,
-      'taskStateMessageType': taskStateMessageType,
+      'repliedMessageType': repliedMessageType.name,
+      'taskStateMessageType': taskStateMessageType.name,
     };
   }
 
@@ -85,6 +74,22 @@ class MessageModel extends MessageEntity {
       repliedTo: repliedTo ?? this.repliedTo,
       repliedMessageType: repliedMessageType ?? this.repliedMessageType,
       taskStateMessageType: taskStateMessageType ?? this.taskStateMessageType,
+    );
+  }
+
+  static MessageModel fromEntity(MessageEntity entity) {
+    return MessageModel(
+      senderId: entity.senderId,
+      recieverId: entity.recieverId,
+      text: entity.text,
+      type: entity.type,
+      timeSent: entity.timeSent,
+      messageId: entity.messageId,
+      isSeen: entity.isSeen,
+      repliedMessage: entity.repliedMessage,
+      repliedTo: entity.repliedTo,
+      repliedMessageType: entity.repliedMessageType,
+      taskStateMessageType: entity.taskStateMessageType,
     );
   }
 }

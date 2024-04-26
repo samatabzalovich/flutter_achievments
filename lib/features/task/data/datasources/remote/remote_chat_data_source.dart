@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_achievments/core/enums/message_type.dart';
 import 'package:flutter_achievments/core/error/exception.dart';
 import 'package:flutter_achievments/core/error/firestore_errors/firestore_errors.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
@@ -11,8 +10,9 @@ import 'package:flutter_achievments/features/task/data/models/shared/chat_model.
 import 'package:flutter_achievments/features/task/data/models/shared/message_model.dart';
 
 abstract class RemoteChatDataSource {
-  Future<void> sendMessage(MessageModel message, String chatId);
-  Stream<List<MessageModel>> getMessages(String chatId);
+  Future<void> sendMessage(
+      MessageModel message, String chatId, List<String> members);
+  Future<List<MessageModel>> getMessages(String chatId);
   Future<void> sendMessageSeen({
     required String messageId,
   });
@@ -20,8 +20,8 @@ abstract class RemoteChatDataSource {
       {required MessageModel message,
       required String filePath,
       Sink<double>? progressSink,
-      required String chatId
-      });
+      required String chatId,
+      required List<String> members});
 
   Stream<List<ChatModel>> getChats();
 }
@@ -35,25 +35,32 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
       this._firestore, this._firebaseStorage, this._firebaseAuth);
 
   @override
-  Stream<List<MessageModel>> getMessages(String chatId) {
-    return _firestore
-        .collection('chat')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('timeSent')
-        .snapshots()
-        .map((event) {
-      return event.docs.map((e) {
-        return MessageModel.fromMap(e.data());
-      }).toList();
-    });
+  Future<List<MessageModel>> getMessages(String chatId) async {
+    try {
+      final messages = await _firestore
+          .collection('chat')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('timeSent')
+          .get()
+          .then((value) {
+        return value.docs.map((e) {
+          return MessageModel.fromMap(e.data());
+        }).toList();
+      });
+      return messages;
+    } on FirebaseException catch (e) {
+      throw FireStoreError.from(e);
+    }
   }
 
   @override
   Future<void> sendFileMessage(
       {required MessageModel message,
       required String filePath,
-      Sink<double>? progressSink,required String chatId}) async {
+      Sink<double>? progressSink,
+      required String chatId,
+      required List<String> members}) async {
     try {
       final file = File(filePath);
       final fileRef = _firebaseStorage
@@ -95,16 +102,22 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
           subscription.cancel();
         }
       });
-      await sendMessage(message.copyWith(text: downloadUrl!, ), chatId);
+      await sendMessage(
+          message.copyWith(
+            text: downloadUrl!,
+          ),
+          chatId,
+          members);
     } on StorageError {
       rethrow;
-    } on ApiException  {
+    } on ApiException {
       rethrow;
     }
   }
 
   @override
-  Future<void> sendMessage(MessageModel message, String chatId) async {
+  Future<void> sendMessage(
+      MessageModel message, String chatId, List<String> members) async {
     try {
       final batch = _firestore.batch();
       final messageRef = _firestore
@@ -112,17 +125,21 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
           .doc(chatId)
           .collection('messages')
           .doc();
-      batch.set(messageRef, message.toMap());
-      batch.update(_firestore.collection('chat').doc(chatId), {
-        'lastMessage': message.text,
-        'lastMessageTime': message.timeSent,
-        'lastMessageType': message.type.fromEnum(),
+      batch.set(messageRef,
+          message.copyWith(senderId: _firebaseAuth.currentUser!.uid).toMap());
+      batch.set(_firestore.collection('chat').doc(chatId), {
+        ...ChatModel.fromMessageModel(message, members)
+            .copyWith(
+              lastMessageSender: _firebaseAuth.currentUser!.uid,
+              lastMessageId: messageRef.id,
+            )
+            .toMap()
       });
 
       await batch.commit();
     } on FirebaseException catch (e) {
       throw FireStoreError.from(e);
-    }
+    } 
   }
 
   @override
@@ -137,10 +154,11 @@ class RemoteChatDataSourceImpl implements RemoteChatDataSource {
     return _firestore
         .collection('chat')
         .where('members', arrayContains: _firebaseAuth.currentUser!.uid)
+        .orderBy('lastMessageTime')
         .snapshots()
         .map((event) {
       return event.docs.map((e) {
-        return ChatModel.fromMap(e.data());
+        return ChatModel.fromMap(e.data(), e.id);
       }).toList();
     });
   }

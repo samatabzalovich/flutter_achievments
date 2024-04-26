@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/permanent_task_model.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
-import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 
 class PermanentTaskEntity extends TaskEntity {
@@ -14,39 +16,25 @@ class PermanentTaskEntity extends TaskEntity {
   final bool isMandatory;
   final int taskCompletionNumber;
   const PermanentTaskEntity({
-    required String id,
-    required String title,
-    String? description,
-    required TaskStateEnum state,
-    required FrameAvatarEntity avatar,
-    required CategoryEntity category,
-    required int reward,
-    required String parentId,
-    required List<String> children,
-    required bool commonTask,
-    required bool withoutChecking,
-    required bool isPhotoReportIncluded,
-    AvatarEntity? photoReport,
+    required super.id,
+    required super.title,
+    super.description,
+    required super.state,
+    required super.avatar,
+    required super.category,
+    required super.reward,
+    required super.parentId,
+    required super.children,
+    required super.commonTask,
+    required super.withoutChecking,
+    required super.isPhotoReportIncluded,
+    super.photoReport,
     required this.maximumReward,
     required this.isHidddenWhenMax,
     required this.isMandatory,
-    required DateTime createdAt,
+    required super.createdAt,
     required this.taskCompletionNumber,
   }) : super(
-          id: id,
-          title: title,
-          description: description,
-          state: state,
-          avatar: avatar,
-          category: category,
-          reward: reward,
-          parentId: parentId,
-          children: children,
-          commonTask: commonTask,
-          withoutChecking: withoutChecking,
-          isPhotoReportIncluded: isPhotoReportIncluded,
-          photoReport: photoReport,
-          createdAt: createdAt,
           type: TaskType.permanent,
         );
 
@@ -85,5 +73,10 @@ class PermanentTaskEntity extends TaskEntity {
       isHidddenWhenMax: true,
       isMandatory: true,
     );
+  }
+
+  @override
+  TaskModel toModel() {
+    return PermanentTaskModel.fromEntity(this);
   }
 }

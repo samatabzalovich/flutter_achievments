@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
+import 'package:flutter_achievments/core/enums/task_state.dart';
 import 'package:flutter_achievments/features/task/data/models/shared/category_model.dart';
 import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/one_time_task_entity.dart';
@@ -14,6 +17,7 @@ class OneTimeTaskModel extends OneTimeTaskEntity implements TaskModel {
       required super.reward,
       required super.parentId,
       required super.children,
+      required super.description,
       required super.commonTask,
       required super.withoutChecking,
       required super.isPhotoReportIncluded,
@@ -24,13 +28,12 @@ class OneTimeTaskModel extends OneTimeTaskEntity implements TaskModel {
   @override
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'state': state.name,
-      'avatar': ( avatar as TaskModel).toMap(),
-      'category': (category as CategoryModel).toMap(),
-      'deadLine': deadLine.toIso8601String(),
-      'startTime': startTime.toIso8601String(),
+      'avatar': (avatar).toMap(),
+      'category': (CategoryModel.fromEntity(category)).toMap(),
+      'deadLine': Timestamp.fromDate(deadLine),
+      'startTime': Timestamp.fromDate(startTime),
       'reward': reward,
       'parentId': parentId,
       'children': children,
@@ -39,7 +42,9 @@ class OneTimeTaskModel extends OneTimeTaskEntity implements TaskModel {
       'isPhotoReportIncluded': isPhotoReportIncluded,
       'photoReport': photoReport?.toMap(),
       'placedInSkipped': placedInSkipped,
-      'createdAt': createdAt,
+      'createdAt': FieldValue.serverTimestamp(),
+      'description': description,
+      'type': type.name,
     };
   }
 
@@ -47,20 +52,43 @@ class OneTimeTaskModel extends OneTimeTaskEntity implements TaskModel {
     return OneTimeTaskModel(
       id: map['id'],
       title: map['title'],
-      state: map['state'],
-      avatar: map['avatar'],
-      category: map['category'],
-      deadLine: DateTime.parse(map['deadLine']),
-      startTime: DateTime.parse(map['startTime']),
+      state: TaskStateEnum.fromString(map['state']),
+      avatar: FrameAvatarEntity.fromMap(map['avatar']),
+      category: CategoryModel.fromMap(map['category']),
+      deadLine: (map['deadLine'] as Timestamp).toDate(),
+      startTime:  (map['startTime'] as Timestamp).toDate(),
       reward: map['reward'],
       parentId: map['parentId'],
-      children: map['children'],
+      children:( map['children']as List).map((e) => e.toString()).toList(), 
       commonTask: map['commonTask'],
       withoutChecking: map['withoutChecking'],
       isPhotoReportIncluded: map['isPhotoReportIncluded'],
       photoReport: map['photoReport'],
       placedInSkipped: map['placedInSkipped'],
-      createdAt: map['createdAt'],
+      createdAt: (map['createdAt']as Timestamp).toDate(),
+      description: map['description'],
+    );
+  }
+
+  static OneTimeTaskModel fromEntity(OneTimeTaskEntity entity) {
+    return OneTimeTaskModel(
+      id: entity.id,
+      title: entity.title,
+      state: entity.state,
+      avatar: entity.avatar,
+      category: entity.category,
+      deadLine: entity.deadLine,
+      startTime: entity.startTime,
+      reward: entity.reward,
+      parentId: entity.parentId,
+      children: entity.children,
+      commonTask: entity.commonTask,
+      withoutChecking: entity.withoutChecking,
+      isPhotoReportIncluded: entity.isPhotoReportIncluded,
+      photoReport: entity.photoReport,
+      placedInSkipped: entity.placedInSkipped,
+      createdAt: entity.createdAt,
+      description: entity.description,
     );
   }
 }

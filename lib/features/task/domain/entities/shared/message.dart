@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'package:flutter_achievments/core/enums/message_type.dart';
+import 'package:flutter_achievments/features/task/domain/entities/shared/chat_entity.dart';
 
 class MessageEntity extends Equatable {
   final String senderId;
@@ -44,5 +45,19 @@ class MessageEntity extends Equatable {
         taskStateMessageType,
       ];
 
-  
+  factory MessageEntity.fromChatEntity(ChatEntity chatEntity) {
+    return MessageEntity(
+      senderId: chatEntity.lastMessageSender,
+      recieverId: chatEntity.chatId,
+      text: chatEntity.lastMessage,
+      type: chatEntity.lastMessageType,
+      timeSent: chatEntity.lastMessageTime,
+      messageId: chatEntity.lastMessageId,
+      isSeen: chatEntity.isSeen,
+      repliedMessage: chatEntity.repliedMessage,
+      repliedTo: chatEntity.repliedTo,
+      repliedMessageType: chatEntity.repliedMessageType,
+      taskStateMessageType: chatEntity.taskStateMessageType,
+    );
+  }
 }

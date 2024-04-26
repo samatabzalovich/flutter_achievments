@@ -10,6 +10,7 @@ import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/one_time_task_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/repeatable_task_entity.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/common/task_page.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,86 +23,91 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     const double coeff = 0.3;
     late Color backGroundColor;
-    if (task.createdAt.day == DateTime.now().day) {
+    if (_isTaskNew()) {
       backGroundColor = greenTileBackground;
     } else {
       backGroundColor = Colors.white;
     }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 17.w),
-          child: CustomPaint(
-            painter: ClipShadowShadowPainter(
-              clipper: NotchedRectangleClipper(),
-            ),
-            child: ClipPath(
-              clipper: NotchedRectangleClipper(
-                startWidthCoeff: coeff,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(TaskPage.routeName, arguments: task);
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 17.w),
+            child: CustomPaint(
+              painter: ClipShadowShadowPainter(
+                clipper: NotchedRectangleClipper(),
               ),
-              child: SizedBox(
-                height: 140.h,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: backGroundColor,
-                    borderRadius: BorderRadius.circular(10),
+              child: ClipPath(
+                clipper: NotchedRectangleClipper(
+                  startWidthCoeff: coeff,
+                ),
+                child: SizedBox(
+                  height: 140.h,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: backGroundColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SizedBox(
+                            width: constraints.maxWidth * 0.3,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: CustomImageFrame(tileAvatar: task.avatar),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 8.h,
+                                horizontal: 10.w,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _buildTaskDeadlineBlocks(),
+                                  CustomTextNoTr.darkBlueTitle(
+                                    task.title,
+                                    fontSize: 16,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      _buildTaskStateWidget(),
+                                      Row(
+                                        children: [
+                                          CustomTextNoTr.darkBlueTitle(
+                                            '+${task.reward.toString()}',
+                                            fontSize: 16,
+                                          ),
+                                          SvgPicture.asset('assets/icons/gem.svg',
+                                              width: 20.w, height: 25.h)
+                                        ],
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      );
+                    }),
                   ),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        SizedBox(
-                          width: constraints.maxWidth * 0.3,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            child: CustomImageFrame(tileAvatar: task.avatar),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 8.h,
-                              horizontal: 10.w,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _buildTaskDeadlineBlocks(),
-                                CustomTextNoTr.darkBlueTitle(
-                                  task.title,
-                                  fontSize: 16,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    _buildTaskStateWidget(),
-                                    Row(
-                                      children: [
-                                        CustomTextNoTr.darkBlueTitle(
-                                          '+${task.reward.toString()}',
-                                          fontSize: 16,
-                                        ),
-                                        SvgPicture.asset('assets/icons/gem.svg',
-                                            width: 20.w, height: 25.h)
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  }),
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 
@@ -117,7 +123,7 @@ class TaskTile extends StatelessWidget {
         String stateName = task.state.name;
         late Color backGroundColor;
         late Color textColor;
-        if (task.createdAt.day == DateTime.now().day) {
+        if (_isTaskNew()) {
           backGroundColor = greenButtonGradient2;
           textColor = Colors.white;
           stateName = LocaleKeys.newTaskState;
@@ -162,7 +168,7 @@ class TaskTile extends StatelessWidget {
   Widget _buildTaskDeadlineBlocks() {
     Color backGroundColor;
     Color textColor;
-    if (task.createdAt.day == DateTime.now().day) {
+    if (_isTaskNew()) {
       backGroundColor = greenTileBackground;
       textColor = Colors.white;
     } else {
@@ -246,7 +252,7 @@ class TaskTile extends StatelessWidget {
 
   DecoratedBox _buildDeadlineBlock(Widget child) {
     Color backGroundColor;
-    if (task.createdAt.day == DateTime.now().day) {
+    if (_isTaskNew()) {
       backGroundColor = greenButtonGradient2;
     } else {
       backGroundColor = lightBlueBackground;
@@ -348,6 +354,10 @@ class TaskTile extends StatelessWidget {
     }
 
     return _buildDeadlineBlock(child);
+  }
+
+  bool _isTaskNew() {
+    return (task.createdAt.day == DateTime.now().day && (DateTime.now().hour - task.createdAt.toLocal().hour) < 3);
   }
 }
 

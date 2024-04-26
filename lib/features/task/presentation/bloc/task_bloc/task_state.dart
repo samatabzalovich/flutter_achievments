@@ -15,6 +15,10 @@ class TaskLoading extends TaskState {
   const TaskLoading();
 }
 
+class GettingTasks extends TaskState {
+  const GettingTasks();
+}
+
 class TaskLoadingProress extends TaskState {
   final double progress;
   const TaskLoadingProress(this.progress);
@@ -55,8 +59,10 @@ class TaskTemlateSaved extends TaskState {
 
 class TaskCreated extends TaskState {
   final TaskEntity task;
+  final String taskId;
   const TaskCreated(
     this.task,
+    this.taskId,
   );
 }
 
@@ -67,6 +73,15 @@ class TaskPhotoReportAttached extends TaskState {
 
   @override
   List<Object> get props => [photoReport, taskId];
+}
+
+class TaskAvatarUploaded extends TaskState {
+  final FrameAvatarEntity taskAvatar;
+  final String taskId;
+  const TaskAvatarUploaded(this.taskAvatar, this.taskId);
+
+  @override
+  List<Object> get props => [taskAvatar, taskId];
 }
 
 class TaskDeleted extends TaskState {

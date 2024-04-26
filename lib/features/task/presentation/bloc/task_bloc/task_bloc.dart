@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases/accept_task.dart';
 import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases/attach_photo_report.dart';
@@ -12,14 +14,16 @@ import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases
 import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases/reject_task.dart';
 import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases/suggest_task.dart';
 import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases/update_task.dart';
+import 'package:flutter_achievments/features/task/domain/usecases/task_use_cases/upload_avatar.dart';
+import 'package:flutter_achievments/features/task/presentation/provider/task_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'task_event.dart';
 part 'task_state.dart';
 
-class TaskBloc extends Cubit<TaskState> {
-  final  GetTaskUseCase _getTaskUseCase;
+class TaskCubit extends Cubit<TaskState> {
+  final GetTaskUseCase _getTaskUseCase;
   final CreateTaskUseCase _createTaskUseCase;
   final AcceptTaskUseCase _acceptTaskUseCase;
   final AttachPhotoReportUseCase _attachPhotoReportUseCase;
@@ -30,8 +34,9 @@ class TaskBloc extends Cubit<TaskState> {
   final RejectTaskUseCase _rejectTaskUseCase;
   final SuggestTaskUseCase _suggestTaskUseCase;
   final UpdateTaskUseCase _updateTaskUseCase;
+  final UploadAvatarUseCase _uploadAvatarUseCase;
 
-  TaskBloc(
+  TaskCubit(
     this._getTaskUseCase,
     this._createTaskUseCase,
     this._acceptTaskUseCase,
@@ -43,17 +48,33 @@ class TaskBloc extends Cubit<TaskState> {
     this._rejectTaskUseCase,
     this._suggestTaskUseCase,
     this._updateTaskUseCase,
+    this._uploadAvatarUseCase,
   ) : super(const TaskInitial());
 
-  void getTasks({required DateTime selectedDate, int limit = 50}) async {
-    emit(const TaskLoading());
-    final result =
-        await _getTaskUseCase(GetTaskUseCaseParams(selectedDate, limit));
-    result.fold(
-      (failure) =>
-          emit(const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
-      (tasks) => emit(TaskLoaded(tasks: tasks)),
-    );
+  void getTasks(
+      {required DateTime selectedDate,
+      int limit = 50,
+      required String userId,
+      String performer = '',
+      required BuildContext context}) async {
+    emit(const GettingTasks());
+    final tasksFromProvider = context.read<TaskProvider>().tasks;
+    if (tasksFromProvider == null) {
+      final result = await _getTaskUseCase(GetTaskUseCaseParams(
+          selectedDate, limit,
+          userId: userId, performer: performer));
+
+      result.fold(
+        (failure) => emit(
+            const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
+        (tasks) {
+          context.read<TaskProvider>().setTasks(tasks);
+          emit(TaskLoaded(tasks: tasks));
+        },
+      );
+      return;
+    }
+    emit(TaskLoaded(tasks: tasksFromProvider));
   }
 
   void createTask(TaskEntity task) async {
@@ -62,41 +83,43 @@ class TaskBloc extends Cubit<TaskState> {
     result.fold(
       (failure) =>
           emit(const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
-      (_) => emit(TaskCreated(
+      (id) => emit(TaskCreated(
         task,
+        id,
       )),
     );
   }
 
-  void acceptTask(String id) async {
-    emit(const TaskLoading());
-    final result = await _acceptTaskUseCase(id);
-    result.fold(
-      (failure) =>
-          emit(const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
-      (_) => getTasks(
-        selectedDate: DateTime.now(),
-      ),
-    );
-  }
+  // void acceptTask(String id) async {
+  //   emit(const TaskLoading());
+  //   final result = await _acceptTaskUseCase(id);
+  //   result.fold(
+  //     (failure) =>
+  //         emit(const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
+  //     (_) => getTasks(
+  //       selectedDate: DateTime.now(),
+  //     ),
+  //   );
+  // }
 
   void attachPhotoReport(
       {required String taskId,
       required NetworkAvatarEntity photoReport}) async {
     emit(const TaskLoadingProress(0));
+
     final reportUploadProgress = BehaviorSubject<double>();
-    final result = await _attachPhotoReportUseCase(AttachPhotoReportParams(
-        progressSink: reportUploadProgress,
-        photo: photoReport,
-        taskId: taskId));
     double progress = 0;
     final sub = reportUploadProgress.listen((value) {
       emit(TaskLoadingProress(value == 100 ? 99.9 : value));
       progress = value;
     });
+    final result = await _attachPhotoReportUseCase(AttachPhotoReportParams(
+        progressSink: reportUploadProgress,
+        photo: photoReport,
+        taskId: taskId));
+    await sub.cancel();
+    await reportUploadProgress.close();
     emit(TaskLoadingProress(progress));
-    sub.cancel();
-    reportUploadProgress.close();
     result.fold(
       (failure) => emit(TaskError(
           dialogTitle: failure.dialogTitle,
@@ -105,6 +128,32 @@ class TaskBloc extends Cubit<TaskState> {
         photoReport,
         taskId,
       ),
+    );
+  }
+
+  void uploadAvatar(
+      {required String taskId, required FrameAvatarEntity photo}) async {
+    emit(const TaskLoadingProress(0));
+    final reportUploadProgress = BehaviorSubject<double>();
+    double progress = 0;
+    final sub = reportUploadProgress.listen((value) {
+      emit(TaskLoadingProress(value == 100 ? 99 : value));
+      progress = value;
+    });
+    final result = await _uploadAvatarUseCase(UploadAvatarUseCaseParams(
+        progressSink: reportUploadProgress, photo: photo, taskId: taskId));
+
+    await sub.cancel();
+    await reportUploadProgress.close();
+    emit(TaskLoadingProress(progress));
+    result.fold(
+      (failure) => emit(TaskError(
+          dialogTitle: failure.dialogTitle,
+          dialogTitleText: failure.dialogText)),
+      (_) => emit(TaskAvatarUploaded(
+        photo,
+        taskId,
+      )),
     );
   }
 
@@ -164,7 +213,7 @@ class TaskBloc extends Cubit<TaskState> {
     result.fold(
       (failure) =>
           emit(const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
-      (_) => TaskCreated(taskEntity),
+      (id) => TaskCreated(taskEntity, id),
     );
   }
 

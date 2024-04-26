@@ -3,6 +3,8 @@ import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/one_time_task_model.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
 import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
@@ -81,5 +83,10 @@ class OneTimeTaskEntity extends TaskEntity {
       placedInSkipped: false,
       createdAt: DateTime.now().subtract(const Duration(days: 1)),
     );
+  }
+
+  @override
+  TaskModel toModel() {
+    return OneTimeTaskModel.fromEntity(this);
   }
 }

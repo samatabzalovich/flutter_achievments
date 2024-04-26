@@ -23,8 +23,8 @@ abstract class FireStoreError extends ApiException {
 class FirestoreErrorUnknown extends FireStoreError {
   const FirestoreErrorUnknown()
       : super(
-          dialogTitle: 'storageErrorUnknown',
-          dialogText: 'storageErrorUnknownText', //An unknown error occurred. Please try again later.
+          dialogTitle: 'firestoreErrorUnknown',
+          dialogText: 'firestoreErrorUnknownText', //An unknown error occurred. Please try again later.
         );
 }
 

@@ -9,7 +9,7 @@ import 'package:flutter_achievments/features/app/presentation/provider/user_prov
 import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/avatar_page.dart';
 import 'package:flutter_achievments/features/auth/presentation/widgets/sign_up_widgets/choose_type_butons.dart';
-import 'package:flutter_achievments/features/profile/presentation/widgets/common/custom_switch_description.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_switch_description.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:provider/provider.dart';
 

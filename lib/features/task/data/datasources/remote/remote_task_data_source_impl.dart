@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
+import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/core/error/firestore_errors/firestore_errors.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
 import 'package:flutter_achievments/features/task/data/datasources/remote/remote_task_data_source.dart';
@@ -39,8 +41,61 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
       required String taskId,
       required NetworkAvatarEntity photo}) async {
     try {
+      final downloadUrl = await _getDownloadUrl(
+        bucketPath: 'tasks/reports/',
+        filePath: filePath,
+        taskId: taskId,
+        progressSink: progressSink,
+      );
+      await _firestore
+          .collection('tasks')
+          .doc(taskId)
+          .update({'photoReport': photo.copyWith(downloadUrl)});
+    } on StorageError {
+      rethrow;
+    } on FirebaseException catch (e) {
+      throw FireStoreError.from(e);
+    }
+  }
+
+  @override
+  Future<void> uploadTaskAvatar(
+      {required String filePath,
+      Sink<double>? progressSink,
+      required String taskId,
+      required FrameAvatarEntity taskAvatar}) async {
+    try {
+      final downloadUrl = await _getDownloadUrl(
+        bucketPath: 'tasks/avatars/',
+        filePath: filePath,
+        taskId: taskId,
+        progressSink: progressSink,
+      );
+      final avatar =
+          (taskAvatar.avatar as NetworkAvatarEntity).copyWith(downloadUrl);
+      await _firestore.collection('tasks').doc(taskId).update({
+        'avatar': taskAvatar
+            .copyWith(
+              avatar: avatar,
+            )
+            .toMap()
+      });
+    } on StorageError {
+      rethrow;
+    } on FirebaseException catch (e) {
+      throw FireStoreError.from(e);
+    }
+  }
+
+  Future<String> _getDownloadUrl({
+    required String filePath,
+    required String taskId,
+    required String bucketPath,
+    Sink<double>? progressSink,
+  }) async {
+    try {
       final file = File(filePath);
-      final fileRef = _firebaseStorage.ref().child('tasks/reports/$taskId');
+      final fileRef = _firebaseStorage.ref().child('$bucketPath$taskId');
       final uploadTask = fileRef.putFile(file);
       // Listen to changes in the upload task
       final subscription = uploadTask.snapshotEvents.listen(
@@ -77,14 +132,9 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
           subscription.cancel();
         }
       });
-      await _firestore
-          .collection('tasks')
-          .doc(taskId)
-          .update({'photoReport': photo.copyWith(downloadUrl!)});
-    } on StorageError {
+      return downloadUrl!;
+    } catch (e) {
       rethrow;
-    } on FirebaseException catch (e) {
-      throw FireStoreError.from(e);
     }
   }
 
@@ -98,9 +148,10 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   }
 
   @override
-  Future<void> createTask(TaskModel task) async {
+  Future<String> createTask(TaskModel task) async {
     try {
-      await _firestore.collection('tasks').add(task.toMap());
+      final res = await _firestore.collection('tasks').add(task.toMap());
+      return res.id;
     } on FirebaseException catch (e) {
       throw FireStoreError.from(e);
     }
@@ -118,16 +169,39 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   @override
   Future<List<TaskModel>> getTasks({
     required DateTime selectedDate,
+    required String userId,
+    required String performer,
     int limit = 50,
   }) async {
     try {
-        final endOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 23, 59, 59);
+      final startOfDay = DateTime(
+          selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
+
       final query = _firestore
           .collection('tasks')
-          .where(Filter.or(
-              Filter("deadLine", isLessThanOrEqualTo: endOfDay),
-              Filter("createdAt", isLessThanOrEqualTo: endOfDay)))
-          .orderBy('createdAt')
+          .where(
+            Filter.and(
+              Filter(
+                "parentId",
+                isEqualTo: userId,
+              ),
+              Filter.or(
+                Filter(
+                  "repeatOnDays",
+                  arrayContains: selectedDate.weekday,
+                ),
+                Filter(
+                  'startTime',
+                  isGreaterThan: startOfDay,
+                ),
+                Filter(
+                  'type',
+                  isEqualTo: TaskType.permanent.name,
+                ),
+              ),
+            ),
+          )
+          // .orderBy('createdAt')
           .limit(limit);
 
       if (_lastDoc != null && _selectedDate == selectedDate) {
@@ -137,6 +211,7 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
       final tasksMap = await query.get();
       final taskModels = tasksMap.docs.map((e) {
         final data = e.data();
+        data['id'] = e.id;
         switch (data['type']) {
           case 'oneTime':
             return OneTimeTaskModel.fromMap(data);
@@ -148,7 +223,9 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
             throw const FirestoreErrorUnknown();
         }
       }).toList();
-      _lastDoc = tasksMap.docs.last;
+      if (tasksMap.docs.isNotEmpty) {
+        _lastDoc = tasksMap.docs.last;
+      }
       _selectedDate = selectedDate;
       return taskModels;
     } on FirebaseException catch (e) {
@@ -187,9 +264,10 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
   }
 
   @override
-  Future<void> suggestTask(TaskModel task) async {
+  Future<String> suggestTask(TaskModel task) async {
     try {
-      await _firestore.collection('tasks').add(task.toMap());
+      final res = await _firestore.collection('tasks').add(task.toMap());
+      return res.id;
     } on FirebaseException catch (e) {
       throw FireStoreError.from(e);
     }

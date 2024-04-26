@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
 import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 
@@ -39,9 +40,6 @@ abstract class TaskEntity extends Equatable {
     required this.type,
   });
 
-  
-
-  
 
   @override
   List<Object?> get props => [
@@ -61,4 +59,6 @@ abstract class TaskEntity extends Equatable {
         createdAt,
         type,
       ];
+
+    TaskModel toModel();
 }

@@ -44,7 +44,12 @@ class SplashDataSourceImpl implements SplashDataSource {
             .collection('users')
             .where('parentId', isEqualTo: id)
             .get();
-        userData['children'] = children.docs.map((e) => e.data()).toList();
+        userData['children'] = children.docs.map((e) => {
+          
+          ...e.data(),
+          'id': e.id,
+        }).toList();
+        
         return ParentModel.fromMap(userData, id);
       } else if (userData['userType'] == 'child') {
         return ChildModel.fromMap(userData, id);

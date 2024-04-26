@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_achievments/core/error/failure.dart';
+import 'package:flutter_achievments/core/error/firestore_errors/firestore_errors.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
 import 'package:flutter_achievments/core/utils/typedefs.dart';
 import 'package:flutter_achievments/features/task/data/datasources/remote/remote_chat_data_source.dart';
@@ -12,8 +13,13 @@ class ChatRepoImpl implements ChatRepo {
   final RemoteChatDataSource _chatDataSource;
   const ChatRepoImpl(this._chatDataSource);
   @override
-  Stream<List<MessageEntity>> getMessages(String chatId) {
-    return _chatDataSource.getMessages(chatId);
+  ResultFuture<List<MessageEntity>> getMessages(String chatId) async {
+    try {
+      final messages = await _chatDataSource.getMessages(chatId);
+      return Right(messages);
+    } on FireStoreError catch (e) {
+      return Left(ApiFailure.fromException(e));
+    }
   }
 
   @override
@@ -21,13 +27,14 @@ class ChatRepoImpl implements ChatRepo {
       {required MessageEntity message,
       required String filePath,
       Sink<double>? progressSink,
-      required String chatId
+      required String chatId,
+      required List<String> members
       }) async {
     try {
       await _chatDataSource.sendFileMessage(
           message: message as MessageModel,
           filePath: filePath,
-          progressSink: progressSink, chatId: chatId);
+          progressSink: progressSink, chatId: chatId, members: members);
       return const Right(null);
     } on StorageError catch (e) {
       return Left(ApiFailure.fromException(e));
@@ -35,9 +42,9 @@ class ChatRepoImpl implements ChatRepo {
   }
 
   @override
-  ResultFuture<void> sendMessage(MessageEntity message, {required String chatId}) async {
+  ResultFuture<void> sendMessage(MessageEntity message, {required String chatId, required List<String> members}) async {
     try {
-      await _chatDataSource.sendMessage(message as MessageModel, chatId);
+      await _chatDataSource.sendMessage(MessageModel.fromEntity(message), chatId, members);
       return const Right(null);
     } catch (e) {
       return const Left(ApiFailure(

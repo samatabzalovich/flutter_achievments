@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,10 +19,10 @@ class CroppedImage extends StatefulWidget {
 }
 
 class _CroppedImageState extends State<CroppedImage> {
-  late CropController _controller;
+   CropController? _controller;
   late ImageStream _imageStream;
   late ImageStreamListener _imageStreamListener;
-  Image? croppedImage;
+  ui.Image? croppedImage;
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class _CroppedImageState extends State<CroppedImage> {
           defaultCrop: (widget.avatar as NetworkAvatarEntity).crop,
         );
         Provider.of<LoginLifeCycleCache>(context, listen: false)
-            .addCropController(widget.avatar.photoUrl, _controller);
+            .addCropController(widget.avatar.photoUrl, _controller!);
       } else {
         _controller = Provider.of<LoginLifeCycleCache>(context, listen: false)
             .getCropController(widget.avatar.photoUrl)!;
@@ -44,12 +46,14 @@ class _CroppedImageState extends State<CroppedImage> {
         widget.avatar.photoUrl,
       ).image.resolve(const ImageConfiguration());
       _imageStreamListener = ImageStreamListener((info, _) async {
-        _controller.image = info.image;
-        croppedImage = await _controller.croppedImage();
-        setState(() {});
+        if (mounted) {
+          _controller!.image = info.image;
+          croppedImage = await _controller!.croppedBitmap();
+          setState(() {});
+        }
       });
       _imageStream.addListener(_imageStreamListener);
-    }
+    } 
   }
 
   @override
@@ -59,19 +63,25 @@ class _CroppedImageState extends State<CroppedImage> {
     }
   }
 
-
+  
 
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      if (_controller.getImage() == null) {
+      if (_controller?.getImage() == null) {
         return const SizedBox();
       }
 
       return Stack(
         fit: StackFit.expand,
         children: [
-          FittedBox(fit: BoxFit.fill, child: croppedImage ?? const SizedBox())
+          FittedBox(
+              fit: BoxFit.fill,
+              child: croppedImage != null
+                  ? Image(
+                      image: UiImageProvider(croppedImage!),
+                    )
+                  : const SizedBox())
         ],
       );
     });

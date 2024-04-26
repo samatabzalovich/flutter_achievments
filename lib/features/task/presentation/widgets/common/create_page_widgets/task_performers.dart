@@ -1,21 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/avatar_builder.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_switch_description.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_text_no_tr.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
-import 'package:flutter_achievments/features/profile/presentation/widgets/common/custom_switch_description.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class TaskPerformers extends StatefulWidget {
   const TaskPerformers({
-    Key? key,
+    super.key,
     required this.onPerformersSelected,
-  }) : super(key: key);
+  });
   final Function(List<ChildEntity> performers, bool isCommonTask)
       onPerformersSelected;
 
@@ -62,7 +63,7 @@ class _TaskPerformsState extends State<TaskPerformers> {
                     widget.onPerformersSelected(selectedChildren, isCommonTask);
                   });
                 },
-                child: const CustomText(
+                child: const CustomTextNoTr(
                   LocaleKeys.removeSelected,
                   fontSize: 14,
                   color: lightBlue2,
@@ -73,12 +74,16 @@ class _TaskPerformsState extends State<TaskPerformers> {
           height: 16,
         ),
         _buildSelectPerformer(),
-        CustomSwitchDescription(onChanged: (value) {
-          setState(() {
-            isCommonTask = value;
-            widget.onPerformersSelected(selectedChildren, isCommonTask);
-          });
-        }, paragraphFirst: LocaleKeys.commonTaskDescription, paragraphSecond: '', description: LocaleKeys.commonTask)
+        CustomSwitchDescription(
+            onChanged: (value) {
+              setState(() {
+                isCommonTask = value;
+                widget.onPerformersSelected(selectedChildren, isCommonTask);
+              });
+            },
+            paragraphFirst: LocaleKeys.commonTaskDescription,
+            paragraphSecond: '',
+            description: LocaleKeys.commonTask)
       ],
     );
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/child_entity.dart';
+import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
 import 'package:flutter_achievments/features/app/domain/shared_entities/user_entity.dart';
 import 'package:flutter_achievments/core/enums/user_type.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
 import 'package:flutter_achievments/core/routes/route_not_found_page.dart';
 import 'package:flutter_achievments/core/services/get_it.dart';
+import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
 import 'package:flutter_achievments/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter_achievments/features/auth/presentation/pages/login/login_page.dart';
 import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sign_up_child_page.dart';
@@ -17,8 +19,12 @@ import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/sig
 import 'package:flutter_achievments/features/auth/presentation/pages/sign_up/terms_of_use_page.dart';
 import 'package:flutter_achievments/features/profile/presentation/pages/choose_type_page.dart';
 import 'package:flutter_achievments/features/splash/presentation/pages/splash_screen.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
+import 'package:flutter_achievments/features/task/presentation/bloc/task_bloc/task_bloc.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/chat/chat_page.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/common/choose_category_task_page.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/common/create_task_page.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/common/task_page.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/home/child_home_page.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
 import 'package:flutter_achievments/features/task/presentation/provider/page_index.dart';

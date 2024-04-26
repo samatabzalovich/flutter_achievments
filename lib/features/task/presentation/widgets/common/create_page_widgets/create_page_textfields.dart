@@ -8,7 +8,7 @@ import 'package:flutter_achievments/generated/locale_keys.g.dart';
 class CreatePageTextFields extends StatefulWidget {
   const CreatePageTextFields({super.key, required this.onChanged});
 
-  final Function(String taskName, String taskDescription) onChanged;
+  final Function(String taskName, String taskDescription, bool isDescIncluded) onChanged;
 
   @override
   State<CreatePageTextFields> createState() => _CreatePageTextFieldsState();
@@ -44,7 +44,7 @@ class _CreatePageTextFieldsState extends State<CreatePageTextFields> {
             focusNode: _taskNameFocusNode,
             onChanged: (taskName) {
               this.taskName = taskName;
-              widget.onChanged(taskName, taskDescription);
+              widget.onChanged(taskName, taskDescription, isDescriptionProvided);
             },
             validator: (val) {
               if (val.isEmpty) {
@@ -68,7 +68,7 @@ class _CreatePageTextFieldsState extends State<CreatePageTextFields> {
                   focusNode: _taskDeskFocusNode,
                   onChanged: (taksDesk) {
                     taskDescription = taksDesk;
-                    widget.onChanged(taskName, taskDescription);
+                    widget.onChanged(taskName, taskDescription, isDescriptionProvided);
                   },
                   validator: (val) {
                     if (val.isEmpty || val.length < 10) {

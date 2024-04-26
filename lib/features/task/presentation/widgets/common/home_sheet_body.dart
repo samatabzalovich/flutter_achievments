@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/features/task/domain/entities/task_entities/one_time_task_entity.dart';
-import 'package:flutter_achievments/features/task/domain/entities/task_entities/permanent_task_entity.dart';
-import 'package:flutter_achievments/features/task/domain/entities/task_entities/repeatable_task_entity.dart';
+import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
+import 'package:flutter_achievments/features/task/presentation/bloc/task_bloc/task_bloc.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/custom_tab_bar.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/date_picker_widget.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/task_tile.dart';
+import 'package:flutter_achievments/features/task/presentation/widgets/common/task_tile_loading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeSheetBody extends StatelessWidget {
   const HomeSheetBody(
@@ -29,7 +31,6 @@ class HomeSheetBody extends StatelessWidget {
             minChildSize: minChildSize,
             maxChildSize: maxChildSize,
           ),
-          
           Expanded(
             child: TabBarView(
               children: [
@@ -37,28 +38,87 @@ class HomeSheetBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DatePickerWidget(
-                      draggableScrollableController: draggableScrollableController,
+                      draggableScrollableController:
+                          draggableScrollableController,
                       minChildSize: minChildSize,
                       maxChildSize: maxChildSize,
                     ),
                     const SizedBox(
                       height: 15,
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        controller: controller,
-                        itemCount: 3,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == 0) {
-                            return TaskTile(task: OneTimeTaskEntity.mock());
-                          } 
-                          if (index == 1) {
-                            return TaskTile(task: PermanentTaskEntity.mock());
-                          }
-                          return TaskTile(task: RepeatableTaskEntity.mock());
-                        },
-                      ),
+                    BlocBuilder<TaskCubit, TaskState>(
+                      builder: (context, state) {
+                        int itemCount = 10;
+                        List<TaskEntity> tasks = [];
+                        if (state is TaskLoaded) {
+                          itemCount = state.tasks.length + 1;
+                          tasks = state.tasks;
+                        }
+                        if (state is TaskError) {
+                          // TODO: error block
+                        }
+                        return Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            controller: controller,
+                            itemCount: itemCount,
+                            // physics: tasks.isNotEmpty
+                            //     ? const AlwaysScrollableScrollPhysics()
+                            //     : const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == itemCount - 1) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20, bottom: 50, top: 20),
+                                  child: Row(
+                                    children: [
+                                      const Expanded(
+                                        child: SizedBox(
+                                          height: 1,
+                                          child: DecoratedBox(
+                                            decoration:
+                                                BoxDecoration(color: greyColor),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.keyboard_arrow_up,
+                                          color: greyColor,
+                                        ),
+                                        onPressed: () {
+                                          controller.animateTo(
+                                              controller
+                                                  .position.minScrollExtent,
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              curve: Curves.easeInOut);
+                                        },
+                                      ),
+                                      const Expanded(
+                                        child: SizedBox(
+                                          height: 1,
+                                          child: DecoratedBox(
+                                            decoration:
+                                                BoxDecoration(color: greyColor),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+                              if (tasks.isNotEmpty) {
+                                return TaskTile(
+                                  task: tasks[index],
+                                );
+                              }
+
+                              return const TaskTileLoading();
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

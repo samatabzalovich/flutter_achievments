@@ -45,7 +45,8 @@ class _AnimatedNavbarState extends State<AnimatedNavbar>
         });
       } else {
         // Calculate the opacity based on the size
-        progress = (size - widget.minChildSize) / (widget.maxChildSize - widget.minChildSize);
+        progress = (size - widget.minChildSize) /
+            (widget.maxChildSize - widget.minChildSize);
         setState(() {
           _opacitySelectedChild = progress;
         });
@@ -103,6 +104,7 @@ class _AnimatedNavbarState extends State<AnimatedNavbar>
                     : CustomDropdown(
                         animationController: _animationController,
                       ),
+                
               ],
             ),
           ),
@@ -112,7 +114,8 @@ class _AnimatedNavbarState extends State<AnimatedNavbar>
   }
 
   MainAxisAlignment _getAlignment() {
-    if (widget.controller.isAttached && widget.controller.size > widget.minChildSize) {
+    if (widget.controller.isAttached &&
+        widget.controller.size > widget.minChildSize) {
       return MainAxisAlignment.center;
     } else {
       return MainAxisAlignment.start;

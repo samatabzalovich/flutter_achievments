@@ -6,20 +6,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomImageFrame extends StatelessWidget {
   final FrameAvatarEntity tileAvatar;
-
+  final double? size;
+  final double? innerSize;
   const CustomImageFrame({
     super.key,
     required this.tileAvatar,
+     this.size ,
+     this.innerSize
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomHexagon(
-      size: 110.h,
+      size: size ?? 110.h,
       backgroundColor: tileAvatar.backgroundColor,
       child: RepaintBoundary(
         child: CustomHexagon(
-          size: 90.h,
+          size:innerSize ?? 90.h,
           backgroundColor: tileAvatar.backgroundColor,
           child: CroppedImage(
             avatar: tileAvatar.avatar,

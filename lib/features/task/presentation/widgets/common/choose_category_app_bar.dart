@@ -4,6 +4,7 @@ import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/common/create_task_page.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,11 +13,6 @@ class ChooseCategoryAppBar extends StatelessWidget {
   const ChooseCategoryAppBar(this.text, {super.key, this.onBackTapped});
   final String text;
   final Function(dynamic data)? onBackTapped;
-  void _pop(BuildContext context) {
-    Navigator.pop(
-      context,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +40,10 @@ class ChooseCategoryAppBar extends StatelessWidget {
                     Icons.arrow_back_ios,
                     color: Colors.white,
                   ),
-                  onPressed: () => _pop(context)),
+                  onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                    ParentHomePage.routeName,
+                    (route) => false,
+                  )),
               backgroundColor: Colors.transparent,
               elevation: 0,
               title: CustomText(
@@ -65,7 +64,6 @@ class ChooseCategoryAppBar extends StatelessWidget {
                     color: Colors.white,
                   ),
                   child: Column(
-                    
                     children: [
                       _buildTaskTypeWidget(
                         svgPath: 'assets/icons/Icononce.svg',
@@ -97,7 +95,7 @@ class ChooseCategoryAppBar extends StatelessWidget {
                       _buildTaskTypeWidget(
                         svgPath: '',
                         onTap: () {
-                          // Navigator.pushNamed(context, My.routeName, arguments: TaskType.myTemplates);
+                          Navigator.pushNamed(context, '/sss',);
                         },
                         taskType: LocaleKeys.myTemplates,
                       ),
@@ -117,11 +115,9 @@ class ChooseCategoryAppBar extends StatelessWidget {
   }) {
     return TextButton(
         onPressed: onTap,
-        
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(0),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           backgroundColor: MaterialStateProperty.all(Colors.white),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
@@ -129,7 +125,6 @@ class ChooseCategoryAppBar extends StatelessWidget {
             ),
           ),
         ),
-    
         child: Padding(
           padding: EdgeInsets.only(
             right: 15.w,
@@ -155,15 +150,15 @@ class ChooseCategoryAppBar extends StatelessWidget {
                 child: Row(
                   children: [
                     CustomText.darkBlueTitle(
-                  taskType,
-                  fontSize: 16,
-                ),
-                const Spacer(),
-                const Icon(
-                  CupertinoIcons.add,
-                  color: greyColor,
-                  size: 16,
-                )
+                      taskType,
+                      fontSize: 16,
+                    ),
+                    const Spacer(),
+                    const Icon(
+                      CupertinoIcons.add,
+                      color: greyColor,
+                      size: 16,
+                    )
                   ],
                 ),
               )

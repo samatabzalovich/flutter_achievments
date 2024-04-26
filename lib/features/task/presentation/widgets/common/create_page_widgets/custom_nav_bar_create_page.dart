@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
 
 class CreatePageCustomNavBar extends StatelessWidget {
   const CreatePageCustomNavBar({super.key, required this.text});
   final String text;
 void _pop(BuildContext context) {
-    Navigator.pop(
-      context,
-    );
+    Navigator.of(context).pushNamedAndRemoveUntil(
+                    ParentHomePage.routeName,
+                    (route) => false,
+                  );
   }
 
   @override

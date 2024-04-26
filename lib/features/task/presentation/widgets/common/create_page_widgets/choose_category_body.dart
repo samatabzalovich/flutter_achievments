@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_hexagon.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_no_tr.dart';
@@ -16,9 +17,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ChooseCategoryBody extends StatefulWidget {
-  const ChooseCategoryBody(
-      {super.key, required this.onCategoryAndTaskAvatarSelected, });
-  final Function(CategoryEntity? category, AvatarEntity avatar)
+  const ChooseCategoryBody({
+    super.key,
+    required this.onCategoryAndTaskAvatarSelected,
+  });
+  final Function(CategoryEntity? category, FrameAvatarEntity avatar)
       onCategoryAndTaskAvatarSelected;
 
   @override
@@ -36,7 +39,6 @@ class _ChooseCategoryBodyState extends State<ChooseCategoryBody> {
     showWarningMessage = false;
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +103,7 @@ class _ChooseCategoryBodyState extends State<ChooseCategoryBody> {
         return AlertDialog(
           title: const CustomText(
             LocaleKeys.choose,
-            color: lightBlue,
+            color: lightBlue2,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -129,7 +131,9 @@ class _ChooseCategoryBodyState extends State<ChooseCategoryBody> {
                       }
                     });
                     widget.onCategoryAndTaskAvatarSelected(
-                        selectedCategory, selectedAvatar);
+                        selectedCategory,
+                        FrameAvatarEntity(
+                            avatar: selectedAvatar, backgroundColor: color));
                     Navigator.pop(context);
                   },
                   title: CustomText(
@@ -137,10 +141,12 @@ class _ChooseCategoryBodyState extends State<ChooseCategoryBody> {
                     color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
+                    textAlign: TextAlign.left,
                   ),
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.primaries[index],
-                  ),
+                  leading: Icon(
+                    _catIcons[CategoryEntity.defaultCategories()[index].categoryName],
+                    color: lightBlue2,
+                  )
                 );
               },
             ),
@@ -149,6 +155,22 @@ class _ChooseCategoryBodyState extends State<ChooseCategoryBody> {
       },
     );
   }
+
+  static const Map _catIcons = {
+    "householdChores": Icons.home,
+    "studies": Icons.school,
+    "dailyRoutine": Icons.schedule,
+    "selfDevelopment": Icons.lightbulb,
+    "behavioral": Icons.face,
+    "health": Icons.favorite,
+    "neatness": Icons.cleaning_services,
+    "animalsAndPlants": Icons.pets,
+    "friendsAndFamily": Icons.group,
+    "sports": Icons.sports_soccer,
+    "reading": Icons.menu_book,
+    "creativeThinking": Icons.palette,
+    "other": Icons.more_horiz
+  };
 
   Widget _buildChooseCategory() {
     return Column(
@@ -288,8 +310,8 @@ class _ChooseCategoryBodyState extends State<ChooseCategoryBody> {
     if (networkAvatar != null) {
       setState(() {
         selectedAvatar = networkAvatar;
-        widget.onCategoryAndTaskAvatarSelected(
-            selectedCategory, selectedAvatar);
+        widget.onCategoryAndTaskAvatarSelected(selectedCategory,
+            FrameAvatarEntity(avatar: selectedAvatar, backgroundColor: color));
       });
     }
   }

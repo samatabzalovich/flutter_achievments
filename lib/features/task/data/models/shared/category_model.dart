@@ -19,7 +19,7 @@ class CategoryModel extends CategoryEntity {
       id: json['id'],
       categoryName: json['categoryName'],
       categoryDescription: json['categoryDescription'],
-      categoryImage: json['categoryImage'],
+      categoryImage: AvatarEntity.fromMap(json['categoryImage']),
     );
   }
 
@@ -28,5 +28,15 @@ class CategoryModel extends CategoryEntity {
       'id': id,
       'categoryName': categoryName
     };
+  }
+
+
+  static CategoryModel fromEntity(CategoryEntity entity) {
+    return CategoryModel(
+      id: entity.id,
+      categoryName: entity.categoryName,
+      categoryDescription: entity.categoryDescription,
+      categoryImage: entity.categoryImage,
+    );
   }
 }

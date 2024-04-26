@@ -1,20 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
-import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/constant/colors.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.focusNode,
     required this.onChanged,
     required this.validator,
     required this.onSubmitted,
+    this.prefixIcon,
     required this.isPassword,
+    this.borderRadius = 10,
     this.inputType = TextInputType.text,
-  }) : super(key: key);
+    this.onInit,
+    this.border = false,
+  });
   final String labelText;
   final FocusNode focusNode;
   final Function(String) onChanged;
@@ -22,6 +25,10 @@ class CustomTextField extends StatefulWidget {
   final Function(String) onSubmitted;
   final bool isPassword;
   final TextInputType inputType;
+  final double borderRadius;
+  final Widget? prefixIcon;
+  final Function(TextEditingController)? onInit;
+  final bool border;
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
 }
@@ -31,6 +38,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   bool isFocused = false;
   bool isValid = true;
   bool wasValid = true;
+  late TextEditingController controller;  
   @override
   void initState() {
     super.initState();
@@ -40,6 +48,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
       });
     });
     isVisible = widget.isPassword;
+    controller = TextEditingController();
+    widget.onInit?.call(controller);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,15 +67,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: Container(
         height: 56,
         decoration: BoxDecoration(
-            border: isValid
+            border: !widget.border ? isValid
                 ? isFocused
                     ? Border.all(color: borderBlueColor, width: 1)
                     : Border.all(color: Colors.transparent, width: 1)
-                : Border.all(color: redColor, width: 1),
+                : Border.all(color: redColor, width: 1) : Border.all(color: greyColor, width: 1),
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10)),
+            borderRadius: BorderRadius.circular(widget.borderRadius)),
         alignment: Alignment.center,
         child: TextFormField(
+          controller: controller,
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -80,6 +97,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           keyboardType: widget.inputType,
           obscureText: isVisible,
           decoration: InputDecoration(
+            prefixIcon: widget.prefixIcon,
             contentPadding: const EdgeInsets.only(left: 16, bottom: 10),
             border: InputBorder.none,
             label: CustomText(

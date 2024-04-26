@@ -7,6 +7,8 @@ class ScreenUtilities {
     return isTablet ? 0.91 : 0.88; // Example adjustment, customize as needed
   }
 
+  
+
   double getMinChildSize(BuildContext context) {
     var isTablet = MediaQuery.of(context).size.shortestSide > 600;
     return isTablet ? 0.89 : 0.84; // Example adjustment, customize as needed

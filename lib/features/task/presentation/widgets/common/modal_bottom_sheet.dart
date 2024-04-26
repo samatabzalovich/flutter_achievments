@@ -25,8 +25,8 @@ class CustomBottomSheet extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10))),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15))),
             child: builder(context, scrollController));
       },
     );

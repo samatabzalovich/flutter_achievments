@@ -1,6 +1,6 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
-// ignore_for_file: prefer_single_quotes
+// ignore_for_file: prefer_single_quotes, avoid_renaming_method_parameters
 
 import 'dart:ui';
 
@@ -110,7 +110,7 @@ class CodegenLoader extends AssetLoader{
   "doInChecking": "Сделать",
   "deadline": "Срок",
   "photoReport": "Фотоотчет",
-  "hereWillBePhotoReport": "Здесь будет фотоотчет",
+  "hereWillBePhotoReport": "Здесь будет\nфотоотчет",
   "taskDone": "Задача выполнена",
   "taskSkipped": "Задача пропущена",
   "taskRejected": "Задача не принята",
@@ -207,7 +207,11 @@ class CodegenLoader extends AssetLoader{
   "week4day": "чт",
   "week5day": "пт",
   "week6day": "сб",
-  "week7day": "вс"
+  "week7day": "вс",
+  "toCurrent": "В текущие",
+  "ok": "Ок",
+  "photoReportExplanation": "Фотоотчет - это дополнительный способ подтверждения выполнения задачи. Пользователь должен сделать фотографию, демонстрирующую выполнение задачи, и отправить ее для проверки. Это помогает контролировать выполнение задач.",
+  "outOf": "из"
 };
 static const Map<String,dynamic> en = {
   "error": "Error",
@@ -305,7 +309,7 @@ static const Map<String,dynamic> en = {
   "doInChecking": "Do",
   "deadline": "Deadline",
   "photoReport": "Photo report",
-  "hereWillBePhotoReport": "The photo report will be here",
+  "hereWillBePhotoReport": "Здесь будет\nфотоотчет",
   "taskDone": "Task done",
   "taskSkipped": "Task skipped",
   "taskRejected": "Task rejected",
@@ -402,7 +406,11 @@ static const Map<String,dynamic> en = {
   "week4day": "thu",
   "week5day": "fri",
   "week6day": "sat",
-  "week7day": "sun"
+  "week7day": "sun",
+  "toCurrent": "В текущие",
+  "ok": "Ок",
+  "photoReportExplanation": "Фотоотчет - это дополнительный способ подтверждения выполнения задачи. Пользователь должен сделать фотографию, демонстрирующую выполнение задачи, и отправить ее для проверки. Это помогает контролировать выполнение задач.",
+  "outOf": "out of"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ru": ru, "en": en};
 }

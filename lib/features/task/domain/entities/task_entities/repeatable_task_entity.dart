@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_state.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/repeatable_task_model.dart';
+import 'package:flutter_achievments/features/task/data/models/task_models/task_model.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
-import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 
 class RepeatableTaskEntity extends TaskEntity {
@@ -15,49 +17,37 @@ class RepeatableTaskEntity extends TaskEntity {
   final int maximumReward;
   final bool isHidddenWhenMax;
   final bool isMandatory;
+  final int taskCompletionNumber;
   const RepeatableTaskEntity({
-    required String id,
-    required String title,
-    String? description,
-    required TaskStateEnum state,
-    required FrameAvatarEntity avatar,
-    required CategoryEntity category,
+    required super.id,
+    required super.title,
+    super.description,
+    required super.state,
+    required super.avatar,
+    required super.category,
     required this.startTime,
-    required int reward,
-    required String parentId,
-    required List<String> children,
-    required bool commonTask,
-    required bool withoutChecking,
-    required bool isPhotoReportIncluded,
-     AvatarEntity? photoReport,
+    required super.reward,
+    required super.parentId,
+    required super.children,
+    required super.commonTask,
+    required this.taskCompletionNumber,
+    required super.withoutChecking,
+    required super.isPhotoReportIncluded,
+    super.photoReport,
     required this.placedInSkipped,
     required this.repeatOnDays,
     required this.maximumReward,
     required this.isHidddenWhenMax,
     required this.isMandatory,
-    required DateTime createdAt,
-
+    required super.createdAt,
   }) : super(
-          id: id,
-          title: title,
-          description: description,
-          state: state,
-          avatar: avatar,
-          category: category,
-          reward: reward,
-          parentId: parentId,
-          children: children,
-          commonTask: commonTask,
-          withoutChecking: withoutChecking,
-          isPhotoReportIncluded: isPhotoReportIncluded,
-          photoReport: photoReport,
-          createdAt: createdAt,
           type: TaskType.repeatable,
         );
 
-        factory RepeatableTaskEntity.mock() {
+  factory RepeatableTaskEntity.mock() {
     return RepeatableTaskEntity(
       id: '3',
+      taskCompletionNumber: 0,
       title: 'Title',
       description: 'Description',
       state: TaskStateEnum.active,
@@ -65,7 +55,8 @@ class RepeatableTaskEntity extends TaskEntity {
         backgroundColor: lightBlue,
         avatar: NetworkAvatarEntity(
             'https://firebasestorage.googleapis.com/v0/b/flutter-achieve.appspot.com/o/avatars?alt=media&token=6cdc35c2-5d07-45e0-b215-058d65edd553',
-            crop: Rect.fromLTRB(0.7103274559193961, 0.5902602854743917, 1, 0.9764903442485303)),
+            crop: Rect.fromLTRB(
+                0.7103274559193961, 0.5902602854743917, 1, 0.9764903442485303)),
       ),
       category: const CategoryEntity(
         id: '1',
@@ -92,5 +83,10 @@ class RepeatableTaskEntity extends TaskEntity {
       isHidddenWhenMax: true,
       isMandatory: true,
     );
+  }
+
+  @override
+  TaskModel toModel() {
+    return RepeatableTaskModel.fromEntity(this);
   }
 }

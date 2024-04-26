@@ -19,9 +19,9 @@ class CustomDropdown<T> extends StatefulWidget {
   /// dropdownButtonStyles passes styles to OutlineButton.styleFrom()
   final AnimationController animationController;
   const CustomDropdown({
-    Key? key,
+    super.key,
     required this.animationController,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();

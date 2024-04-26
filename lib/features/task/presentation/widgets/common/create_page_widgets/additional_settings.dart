@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
-import 'package:flutter_achievments/features/profile/presentation/widgets/common/custom_switch_description.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_switch_description.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 
 class AdditionalSettings extends StatefulWidget {

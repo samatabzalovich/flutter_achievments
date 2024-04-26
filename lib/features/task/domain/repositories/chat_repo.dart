@@ -3,8 +3,9 @@ import 'package:flutter_achievments/features/task/domain/entities/shared/chat_en
 import 'package:flutter_achievments/features/task/domain/entities/shared/message.dart';
 
 abstract class ChatRepo {
-  ResultFuture<void> sendMessage(MessageEntity message, {required String chatId});
-  Stream<List<MessageEntity>> getMessages(String chatID);
+  ResultFuture<void> sendMessage(MessageEntity message,
+      {required String chatId, required List<String> members});
+  ResultFuture<List<MessageEntity>> getMessages(String chatID);
   Stream<List<ChatEntity>> getChats();
   ResultFuture<void> markMessageSeen({
     required String messageId,
@@ -13,6 +14,6 @@ abstract class ChatRepo {
       {required MessageEntity message,
       required String filePath,
       Sink<double>? progressSink,
-      required String chatId
-      });
+      required List<String> members,
+      required String chatId});
 }

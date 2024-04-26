@@ -9,7 +9,13 @@ class ChatEntity extends Equatable {
   final String lastMessage;
   final MessageEnum lastMessageType;
   final DateTime lastMessageTime;
+  final String lastMessageId;
   final List<String> members;
+  final String lastMessageSender;
+  final String repliedMessage;
+  final String repliedTo;
+  final MessageEnum repliedMessageType;
+  final TaskStateMessageType taskStateMessageType;
   final bool isSeen;
 
   const ChatEntity({
@@ -17,8 +23,14 @@ class ChatEntity extends Equatable {
     required this.lastMessage,
     required this.lastMessageType,
     required this.lastMessageTime,
-    required this.isSeen,
+    required this.lastMessageId,
     required this.members,
+    required this.lastMessageSender,
+    required this.repliedMessage,
+    required this.repliedTo,
+    required this.repliedMessageType,
+    required this.taskStateMessageType,
+    required this.isSeen,
   });
 
   @override
@@ -29,6 +41,13 @@ class ChatEntity extends Equatable {
         lastMessageTime,
         isSeen,
         members,
+        lastMessageId,
+        lastMessageSender,
+        repliedMessage,
+        repliedTo,
+        repliedMessageType,
+        taskStateMessageType,
       ];
 
+  
 }

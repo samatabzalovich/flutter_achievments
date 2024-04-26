@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/core/error/exception.dart';
 import 'package:flutter_achievments/core/error/failure.dart';
 import 'package:flutter_achievments/core/utils/typedefs.dart';
@@ -40,6 +41,25 @@ class TaskRepoImpl implements TaskRepo {
   }
 
   @override
+  ResultFuture<void> uploadAvatar(
+      {required String filePath,
+      Sink<double>? progressSink,
+      required String taskId,
+      required FrameAvatarEntity photo}) async {
+    try {
+      await _taskDataSource.uploadTaskAvatar(
+          filePath: filePath,
+          progressSink: progressSink,
+          taskId: taskId,
+          taskAvatar: photo);
+      return const Right(null);
+    } on ApiException catch (e) {
+      return Left(ApiFailure.fromException(e));
+    }
+  }
+
+
+  @override
   ResultFuture<void> completeTask(String id) async {
     try {
       await _taskDataSource.completeTask(id);
@@ -50,10 +70,10 @@ class TaskRepoImpl implements TaskRepo {
   }
 
   @override
-  ResultFuture<void> createTask(TaskEntity task) async {
+  ResultFuture<String> createTask(TaskEntity task) async {
     try {
-      await _taskDataSource.createTask(task as TaskModel);
-      return const Right(null);
+      final id = await _taskDataSource.createTask(task.toModel());
+      return  Right(id);
     } on ApiException catch (e) {
       return Left(ApiFailure.fromException(e));
     }
@@ -71,9 +91,9 @@ class TaskRepoImpl implements TaskRepo {
 
   @override
   ResultFuture<List<TaskModel>> getTasks({required DateTime selectedDate,
-    int limit = 50,}) async {
+    int limit = 50, required String userId, required String performer}) async {
     try {
-      final tasks = await _taskDataSource.getTasks(selectedDate: selectedDate, limit: limit);
+      final tasks = await _taskDataSource.getTasks(selectedDate: selectedDate, limit: limit,userId: userId, performer: performer);
       return Right(tasks);
     } on ApiException catch (e) {
       return Left(ApiFailure.fromException(e));
@@ -111,10 +131,10 @@ class TaskRepoImpl implements TaskRepo {
   }
 
   @override
-  ResultFuture<void> suggestTask(TaskEntity id) async {
+  ResultFuture<String> suggestTask(TaskEntity task) async {
     try {
-      await _taskDataSource.suggestTask(id as TaskModel);
-      return const Right(null);
+      final id = await _taskDataSource.suggestTask(task.toModel());
+      return  Right(id);
     } on ApiException catch (e) {
       return Left(ApiFailure.fromException(e));
     }

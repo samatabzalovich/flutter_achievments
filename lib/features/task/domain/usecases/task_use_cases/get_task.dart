@@ -9,14 +9,16 @@ class GetTaskUseCase extends UseCaseWithParams<List<TaskEntity>, GetTaskUseCaseP
   const GetTaskUseCase(this._repository);
   @override
   ResultFuture<List<TaskEntity>> call(GetTaskUseCaseParams params) async {
-    return _repository.getTasks(selectedDate: params.selectedDate, limit: params.limit);
+    return _repository.getTasks(selectedDate: params.selectedDate, limit: params.limit, userId: params.userId, performer: params.performer);
   }
 }
 
 class GetTaskUseCaseParams extends Equatable{
   final DateTime selectedDate;
   final int limit;
-  const GetTaskUseCaseParams(this.selectedDate, this.limit);
+  final String userId;
+  final String performer;
+  const GetTaskUseCaseParams(this.selectedDate, this.limit, {required this.userId,required this.performer});
 
   @override
   List<Object> get props => [selectedDate, limit];

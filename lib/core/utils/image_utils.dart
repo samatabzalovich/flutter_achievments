@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
+import 'package:flutter_achievments/core/common/pages/crop_image_page.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
-import 'package:flutter_achievments/core/common/pages/crop_image_page.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageUtils {
@@ -21,6 +21,7 @@ class ImageUtils {
     NetworkAvatarEntity? networkAvatar = await Navigator.push(
       context,
       MyCustomRouteFadeTransition<NetworkAvatarEntity>(
+        name: '/crop-image',
         route: ImageCropPage(
           image: pickedFile,
         ),
@@ -88,5 +89,16 @@ class ImageUtils {
         );
       },
     );
+  }
+
+  Future<File?> pickVideoFromGallery(BuildContext context) async {
+    File? video;
+    final pickedVideo =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedVideo != null) {
+      video = File(pickedVideo.path);
+    }
+
+    return video;
   }
 }
