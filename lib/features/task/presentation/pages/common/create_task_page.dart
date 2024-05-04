@@ -5,9 +5,13 @@ import 'package:flutter_achievments/core/common/widgets/loading/loading_screen.d
 import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/core/services/get_it.dart';
 import 'package:flutter_achievments/core/utils/screen_utilities.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/one_time_task_entity.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/permanent_task_entity.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/repeatable_task_entity.dart';
+import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 import 'package:flutter_achievments/features/task/presentation/bloc/task_bloc/task_bloc.dart'
     as bloc;
-import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
+import 'package:flutter_achievments/features/task/presentation/provider/task_provider.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/create_page_widgets/custom_nav_bar_create_page.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/create_page_widgets/custom_tab_bar_create_page.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/create_page_widgets/task_create_body.dart';
@@ -65,28 +69,41 @@ class _CreateTaskPageState extends State<CreateTaskPage>
         if (state is bloc.TaskCreated) {
           if (state.task.avatar.avatar is NetworkAvatarEntity) {
             final photo = state.task.avatar;
+            context.read<TaskProvider>().addTask(state.task, doesUiNeedsToBeUpdated: false);
             context.read<bloc.TaskCubit>().uploadAvatar(
-                  taskId: state.taskId,
+                  task: state.task,
                   photo: photo,
+                  taskId: state.taskId,
                 );
           } else {
+            TaskEntity task = state.task;
+            switch (state.task.type) {
+              case TaskType.oneTime:
+                task = (task as OneTimeTaskEntity).copyWith(
+                  id: state.taskId,
+                );
+                break;
+              case TaskType.repeatable:
+                task = (task as RepeatableTaskEntity).copyWith(
+                  id: state.taskId,
+                );
+              case TaskType.permanent:
+                task = (task as PermanentTaskEntity).copyWith(
+                  id: state.taskId,
+                );
+            }
+            context.read<TaskProvider>().addTask(task, doesUiNeedsToBeUpdated: true);
             LoadingScreen.instance().hide();
-            // here push and remove all routes because if we pop until there is an error bad state image clone error, we need to init images again
-            //   Navigator.of(context).pushNamedAndRemoveUntil(
-            //   ParentHomePage.routeName,
-            //   (route) => false,
-            // );
-            Navigator.of(context).popUntil(ModalRoute.withName(
-              ParentHomePage.routeName,
-            ));
+            
+            Navigator.of(context).popUntil(
+              (route) => route.isFirst,
+            );
           }
         }
         if (state is bloc.TaskAvatarUploaded) {
+          context.read<TaskProvider>().updateTask(state.task, state.taskId);
           LoadingScreen.instance().hide();
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            ParentHomePage.routeName,
-            (route) => false,
-          );
+          Navigator.of(context).popUntil((route) => route.isFirst);
         }
         if (state is bloc.TaskLoadingProress) {
           LoadingScreen.instance()

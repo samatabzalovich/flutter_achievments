@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
 import 'package:flutter_achievments/features/task/domain/entities/task_entities/task_entity.dart';
 import 'package:flutter_achievments/features/task/presentation/bloc/task_bloc/task_bloc.dart';
+import 'package:flutter_achievments/features/task/presentation/provider/selected_date_provider.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/custom_tab_bar.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/date_picker_widget.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/task_tile.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/task_tile_loading.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class HomeSheetBody extends StatelessWidget {
   const HomeSheetBody(
@@ -46,80 +49,7 @@ class HomeSheetBody extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    BlocBuilder<TaskCubit, TaskState>(
-                      builder: (context, state) {
-                        int itemCount = 10;
-                        List<TaskEntity> tasks = [];
-                        if (state is TaskLoaded) {
-                          itemCount = state.tasks.length + 1;
-                          tasks = state.tasks;
-                        }
-                        if (state is TaskError) {
-                          // TODO: error block
-                        }
-                        return Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            controller: controller,
-                            itemCount: itemCount,
-                            // physics: tasks.isNotEmpty
-                            //     ? const AlwaysScrollableScrollPhysics()
-                            //     : const NeverScrollableScrollPhysics(),
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == itemCount - 1) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20, right: 20, bottom: 50, top: 20),
-                                  child: Row(
-                                    children: [
-                                      const Expanded(
-                                        child: SizedBox(
-                                          height: 1,
-                                          child: DecoratedBox(
-                                            decoration:
-                                                BoxDecoration(color: greyColor),
-                                          ),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_up,
-                                          color: greyColor,
-                                        ),
-                                        onPressed: () {
-                                          controller.animateTo(
-                                              controller
-                                                  .position.minScrollExtent,
-                                              duration: const Duration(
-                                                  milliseconds: 500),
-                                              curve: Curves.easeInOut);
-                                        },
-                                      ),
-                                      const Expanded(
-                                        child: SizedBox(
-                                          height: 1,
-                                          child: DecoratedBox(
-                                            decoration:
-                                                BoxDecoration(color: greyColor),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                              if (tasks.isNotEmpty) {
-                                return TaskTile(
-                                  task: tasks[index],
-                                );
-                              }
-
-                              return const TaskTileLoading();
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                    TaskTileBar(controller: controller),
                   ],
                 ),
                 ListView.builder(
@@ -155,6 +85,103 @@ class HomeSheetBody extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TaskTileBar extends StatelessWidget {
+  const TaskTileBar({
+    super.key,
+    required this.controller,
+  });
+
+  final ScrollController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TaskCubit, TaskState>(
+      builder: (context, state) {
+        DateTime selectedDate =
+            Provider.of<SelectedDateProvider>(context, listen: true)
+                .selectedDate;
+
+        List<TaskEntity> tasks = [];
+        int itemCount = 10;
+        final id =
+            Provider.of<UserProvider>(context, listen: false).currentUser!.id;
+        if ((state is! TaskLoaded && state is! GettingTasks) ||
+            (state is TaskLoaded && (state).selectedDate != selectedDate)) {
+          BlocProvider.of<TaskCubit>(context).getTasks(
+              selectedDate: selectedDate, userId: id, context: context);
+        }
+        if (state is TaskLoaded) {
+          itemCount = state.tasks.length + 1;
+          tasks = state.tasks;
+        }
+        if (tasks.isNotEmpty) {
+          itemCount = tasks.length + 1;
+        }
+        if (state is TaskError) {
+          // TODO: error block
+        }
+        return Expanded(
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            controller: controller,
+            itemCount: itemCount,
+            // physics: tasks.isNotEmpty
+            //     ? const AlwaysScrollableScrollPhysics()
+            //     : const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              if (index == itemCount - 1) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, bottom: 50, top: 20),
+                  child: Row(
+                    children: [
+                      const Expanded(
+                        child: SizedBox(
+                          height: 1,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(color: greyColor),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.keyboard_arrow_up,
+                          color: greyColor,
+                        ),
+                        onPressed: () {
+                          controller.animateTo(
+                              controller.position.minScrollExtent,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut);
+                        },
+                      ),
+                      const Expanded(
+                        child: SizedBox(
+                          height: 1,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(color: greyColor),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }
+              if (tasks.isNotEmpty) {
+                return TaskTile(
+                  task: tasks[index],
+                );
+              }
+
+              return const TaskTileLoading();
+            },
+          ),
+        );
+      },
     );
   }
 }

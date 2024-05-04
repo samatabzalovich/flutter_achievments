@@ -1,8 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_achievments/core/common/widgets/avatar_builder.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/services/get_it.dart';
 import 'package:flutter_achievments/core/utils/screen_utilities.dart';
+import 'package:flutter_achievments/features/app/domain/shared_entities/parent_entity.dart';
+import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
 import 'package:flutter_achievments/features/task/presentation/bloc/chat_bloc/chat_bloc.dart';
 import 'package:flutter_achievments/features/task/presentation/provider/chat_bloc_provider.dart';
 import 'package:flutter_achievments/features/task/presentation/provider/chat_messages_provider.dart';
@@ -28,6 +33,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
   late DraggableScrollableController _controller;
   StreamSubscription? chatErrorSubscription;
   final _advancedDrawerController = AdvancedDrawerController();
+  late final ParentEntity parent;
 
   @override
   void initState() {
@@ -39,6 +45,8 @@ class _ParentHomePageState extends State<ParentHomePage> {
         Provider.of<ChatMessagesProvider>(context, listen: false);
     chatBlocProvider.init(sl<ChatBloc>(), chatProvider);
     initErrorStreamSub(chatBlocProvider.chatBloc!);
+    parent = Provider.of<UserProvider>(context, listen: false).currentUser
+        as ParentEntity;
   }
 
   // TODO: dispose all image controllers in provider and chat bloc and chat messages proivder when log out
@@ -58,11 +66,11 @@ class _ParentHomePageState extends State<ParentHomePage> {
       backdrop: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.blueGrey, Colors.blueGrey.withOpacity(0.2)],
+            colors: [lightBlue, lightBlue2],
           ),
         ),
       ),
@@ -74,14 +82,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
       // openScale: 1.0,
       disabledGestures: false,
       childDecoration: const BoxDecoration(
-        // NOTICE: Uncomment if you want to add shadow behind the page.
-        // Keep in mind that it may cause animation jerks.
-        // boxShadow: <BoxShadow>[
-        //   BoxShadow(
-        //     color: Colors.black12,
-        //     blurRadius: 0.0,
-        //   ),
-        // ],
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       drawer: SafeArea(
@@ -91,43 +91,74 @@ class _ParentHomePageState extends State<ParentHomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                width: 128.0,
-                height: 128.0,
-                margin: const EdgeInsets.only(
-                  top: 24.0,
-                  bottom: 64.0,
+              Column(
+                children: [
+                  Container(
+                    width: 128.0,
+                    height: 128.0,
+                    margin: const EdgeInsets.only(
+                      top: 24.0,
+                      bottom: 14.0,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    decoration: const BoxDecoration(
+                      color: Colors.black26,
+                      shape: BoxShape.circle,
+                    ),
+                    child: AvatarBuilder(
+                      parent.name!,
+                      avatarEntity: parent.avatar,
+                    ),
+                  ),
+                  CustomText(
+                    parent.name!,
+                    color: Colors.white,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  )
+                ],
+              ),
+              ListTile(
+                onTap: () {},
+                leading: const Icon(Icons.home),
+                title: const CustomText(
+                  'Home',
+                  color: Colors.white,
+                  textAlign: TextAlign.start,
                 ),
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  shape: BoxShape.circle,
+              ),
+              ListTile(
+                onTap: () {},
+                leading: const Icon(Icons.account_circle_rounded),
+                title: const CustomText(
+                  'Profile',
+                  color: Colors.white,
+                  textAlign: TextAlign.start,
                 ),
-                child: Text('Avatar'),
               ),
               ListTile(
                 onTap: () {},
-                leading: Icon(Icons.home),
-                title: Text('Home'),
+                leading: const Icon(Icons.favorite),
+                title: const CustomText(
+                  'Favorites',
+                  color: Colors.white,
+                  textAlign: TextAlign.start,
+                ),
               ),
               ListTile(
                 onTap: () {},
-                leading: Icon(Icons.account_circle_rounded),
-                title: Text('Profile'),
+                leading: const Icon(Icons.settings),
+                title: const CustomText(
+                  'Settings',
+                  color: Colors.white,
+                  textAlign: TextAlign.start,
+                ),
               ),
-              ListTile(
-                onTap: () {},
-                leading: Icon(Icons.favorite),
-                title: Text('Favourites'),
-              ),
-              ListTile(
-                onTap: () {},
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
-              Spacer(),
+              const Spacer(),
               DefaultTextStyle(
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   color: Colors.white54,
                 ),
@@ -135,7 +166,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
                   margin: const EdgeInsets.symmetric(
                     vertical: 16.0,
                   ),
-                  child: Text('Terms of Service | Privacy Policy'),
+                  child: const Text('Terms of Service | Privacy Policy'),
                 ),
               ),
             ],

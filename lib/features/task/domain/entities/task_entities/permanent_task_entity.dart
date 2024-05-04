@@ -48,13 +48,12 @@ class PermanentTaskEntity extends TaskEntity {
         backgroundColor: lightBlue,
         avatar: NetworkAvatarEntity(
             'https://firebasestorage.googleapis.com/v0/b/flutter-achieve.appspot.com/o/avatars%2FQKszsTsKZdhmrCszeKya042TGQ62?alt=media&token=f12e853d-c6b3-44e5-8bd7-4869460061c0',
-            crop: Rect.fromLTRB(0, 0.3328, 0.999, 1)),
+           ),
       ),
       category: const CategoryEntity(
         id: '1',
         categoryImage: NetworkAvatarEntity(
           'https://s3-alpha-sig.figma.com/img/b691/a4cb/8aecece021b343047e393731f415791e?Expires=1710720000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=WKcY-l6oQZSN8vr5oHszTeexRuwjXMq6Rb~so33Zx5dyWkx7e4qz1lI6JhA4~cPdIp2y6jbELySzTIxjY1J6IcCP1ATZ69kXb~2AD486yM4uTaWYFz8P51LGhgQO7iQS9MnzJ7MRyFrvkiTI9w-6sd4wJwgPq0x3XgQ-ktpcVZkDC2uG~wHemupbgytTgsRUnfI06v4PpLSymZqPeJQVuAiNT25TPB1ylm8LP1xZFV3HbqPAOe-SDWbfq-G8PiZvgLqP7-71DQJZoBKvP3UGR93DjMyF~XIT9xkiXBtfHZzoDjf2SmT~IjOOjGtZuae6h4U~DewsUWUlG4wQ6Moh~g__',
-          crop: Rect.fromLTRB(0, 0, 1, 1),
         ),
         categoryName: 'Category',
         categoryDescription: 'Category description',
@@ -78,5 +77,48 @@ class PermanentTaskEntity extends TaskEntity {
   @override
   TaskModel toModel() {
     return PermanentTaskModel.fromEntity(this);
+  }
+
+
+  PermanentTaskEntity copyWith({
+    String? id,
+    String? title,
+    String? description,
+    TaskStateEnum? state,
+    FrameAvatarEntity? avatar,
+    CategoryEntity? category,
+    int? reward,
+    String? parentId,
+    List<String>? children,
+    bool? commonTask,
+    bool? withoutChecking,
+    bool? isPhotoReportIncluded,
+    AvatarEntity? photoReport,
+    int? maximumReward,
+    bool? isHidddenWhenMax,
+    bool? isMandatory,
+    DateTime? createdAt,
+    int? taskCompletionNumber,
+  }) {
+    return PermanentTaskEntity(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      state: state ?? this.state,
+      avatar: avatar ?? this.avatar,
+      category: category ?? this.category,
+      reward: reward ?? this.reward,
+      parentId: parentId ?? this.parentId,
+      children: children ?? this.children,
+      commonTask: commonTask ?? this.commonTask,
+      withoutChecking: withoutChecking ?? this.withoutChecking,
+      isPhotoReportIncluded: isPhotoReportIncluded ?? this.isPhotoReportIncluded,
+      photoReport: photoReport ?? this.photoReport,
+      maximumReward: maximumReward ?? this.maximumReward,
+      isHidddenWhenMax: isHidddenWhenMax ?? this.isHidddenWhenMax,
+      isMandatory: isMandatory ?? this.isMandatory,
+      createdAt: createdAt ?? this.createdAt,
+      taskCompletionNumber: taskCompletionNumber ?? this.taskCompletionNumber,
+    );
   }
 }

@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
@@ -35,6 +38,8 @@ class TaskCubit extends Cubit<TaskState> {
   final SuggestTaskUseCase _suggestTaskUseCase;
   final UpdateTaskUseCase _updateTaskUseCase;
   final UploadAvatarUseCase _uploadAvatarUseCase;
+  final _getTasksSubject = PublishSubject<GetTaskWithDebounceParams>();
+  late StreamSubscription<GetTaskWithDebounceParams> _getTasksSubscription;
 
   TaskCubit(
     this._getTaskUseCase,
@@ -49,16 +54,55 @@ class TaskCubit extends Cubit<TaskState> {
     this._suggestTaskUseCase,
     this._updateTaskUseCase,
     this._uploadAvatarUseCase,
-  ) : super(const TaskInitial());
+  ) : super(const TaskInitial()) {
+    _getTasksSubscription = _getTasksSubject //TODO: listener dispose if needed
+        .distinct(
+          (previous, next) =>
+              previous.selectedDate == next.selectedDate &&
+              previous.limit == next.limit &&
+              previous.userId == next.userId &&
+              previous.performer == next.performer,
+        )
+        .debounceTime(const Duration(milliseconds: 700))
+        .listen(
+      (event) {
+        _getTasksWithDebounce(
+          selectedDate: event.selectedDate,
+          limit: event.limit,
+          userId: event.userId,
+          performer: event.performer,
+          context: event.context,
+        );
+      },
+    );
+  }
 
   void getTasks(
       {required DateTime selectedDate,
       int limit = 50,
       required String userId,
       String performer = '',
-      required BuildContext context}) async {
+      required BuildContext context}) {
     emit(const GettingTasks());
-    final tasksFromProvider = context.read<TaskProvider>().tasks;
+    _getTasksSubject.add(GetTaskWithDebounceParams(
+      selectedDate: selectedDate,
+      limit: limit,
+      userId: userId,
+      performer: performer,
+      context: context,
+    ));
+  }
+
+  void _getTasksWithDebounce(
+      {required DateTime selectedDate,
+      int limit = 50,
+      required String userId,
+      String performer = '',
+      required BuildContext context}) async {
+    final startOfDay = DateTime(
+        selectedDate.year, selectedDate.month, selectedDate.day, 0, 0, 0);
+    final tasksFromProvider =
+        context.read<TaskProvider>().getTasksForSelectedDate(startOfDay);
     if (tasksFromProvider == null) {
       final result = await _getTaskUseCase(GetTaskUseCaseParams(
           selectedDate, limit,
@@ -68,13 +112,21 @@ class TaskCubit extends Cubit<TaskState> {
         (failure) => emit(
             const TaskError(dialogTitle: 'Error', dialogTitleText: 'Error')),
         (tasks) {
-          context.read<TaskProvider>().setTasks(tasks);
-          emit(TaskLoaded(tasks: tasks));
+          context.read<TaskProvider>().setTasks(tasks, startOfDay);
+          emit(TaskLoaded(
+              tasks: tasks,
+              userId: userId,
+              performer: performer,
+              selectedDate: selectedDate));
         },
       );
       return;
     }
-    emit(TaskLoaded(tasks: tasksFromProvider));
+    emit(TaskLoaded(
+        tasks: tasksFromProvider,
+        userId: userId,
+        performer: performer,
+        selectedDate: selectedDate));
   }
 
   void createTask(TaskEntity task) async {
@@ -132,7 +184,9 @@ class TaskCubit extends Cubit<TaskState> {
   }
 
   void uploadAvatar(
-      {required String taskId, required FrameAvatarEntity photo}) async {
+      {required TaskEntity task,
+      required FrameAvatarEntity photo,
+      required String taskId}) async {
     emit(const TaskLoadingProress(0));
     final reportUploadProgress = BehaviorSubject<double>();
     double progress = 0;
@@ -150,10 +204,7 @@ class TaskCubit extends Cubit<TaskState> {
       (failure) => emit(TaskError(
           dialogTitle: failure.dialogTitle,
           dialogTitleText: failure.dialogText)),
-      (_) => emit(TaskAvatarUploaded(
-        photo,
-        taskId,
-      )),
+      (_) => emit(TaskAvatarUploaded(photo, task, taskId)),
     );
   }
 
@@ -226,4 +277,26 @@ class TaskCubit extends Cubit<TaskState> {
       (_) => TaskEntityUpdated(taskEntity),
     );
   }
+
+  @override
+  Future<void> close() {
+    _getTasksSubscription.cancel();
+    _getTasksSubject.close();
+    return super.close();
+  }
+}
+
+class GetTaskWithDebounceParams {
+  final DateTime selectedDate;
+  final int limit;
+  final String userId;
+  final String performer;
+  final BuildContext context;
+  GetTaskWithDebounceParams({
+    required this.selectedDate,
+    this.limit = 50,
+    required this.userId,
+    this.performer = '',
+    required this.context,
+  });
 }

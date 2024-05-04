@@ -41,7 +41,14 @@ class TaskEntityUpdated extends TaskState {
 
 class TaskLoaded extends TaskState {
   final List<TaskEntity> tasks;
-  const TaskLoaded({required this.tasks});
+  final String userId;
+  final String performer;
+  final DateTime selectedDate;
+
+  const TaskLoaded({required this.tasks, required this.userId, required this.performer, required this.selectedDate});
+
+  @override
+  List<Object> get props => [tasks, userId, performer, selectedDate];
 }
 
 class TaskError extends TaskState {
@@ -50,7 +57,10 @@ class TaskError extends TaskState {
   const TaskError({required this.dialogTitle, required this.dialogTitleText});
 
   @override
-  List<Object> get props => [dialogTitle, dialogTitleText, ];
+  List<Object> get props => [
+        dialogTitle,
+        dialogTitleText,
+      ];
 }
 
 class TaskTemlateSaved extends TaskState {
@@ -77,11 +87,12 @@ class TaskPhotoReportAttached extends TaskState {
 
 class TaskAvatarUploaded extends TaskState {
   final FrameAvatarEntity taskAvatar;
+  final TaskEntity task;
   final String taskId;
-  const TaskAvatarUploaded(this.taskAvatar, this.taskId);
+  const TaskAvatarUploaded(this.taskAvatar, this.task, this.taskId);
 
   @override
-  List<Object> get props => [taskAvatar, taskId];
+  List<Object> get props => [taskAvatar, taskId, task];
 }
 
 class TaskDeleted extends TaskState {

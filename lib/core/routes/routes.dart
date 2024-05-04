@@ -71,15 +71,16 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
     case ParentHomePage.routeName:
       return MyCustomRouteFadeTransition(
         name: ParentHomePage.routeName,
-        route: ChangeNotifierProvider(
-            create: (_) => PageIndexProvider(),
+        route: MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => PageIndexProvider(),
+              ),
+              ChangeNotifierProvider(create: (_) => SelectedDateProvider())
+            ],
             child: BlocProvider(
               create: (context) {
-                final id = Provider.of<UserProvider>(context, listen: false)
-                    .currentUser!
-                    .id;
-                return sl<TaskCubit>()
-                  ..getTasks(selectedDate: DateTime.now(), userId: id, context: context);
+                return sl<TaskCubit>();
               },
               child: const ParentHomePage(),
             )),

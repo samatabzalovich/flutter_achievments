@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/common/widgets/custom_text_no_tr.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/common/choose_category_task_page.dart';
 
@@ -28,15 +28,13 @@ class CustomFloatingActionButton extends StatelessWidget {
         child: FloatingActionButton(
           elevation: 0,
           onPressed: () {
-            Navigator.of(context).pushNamed(
-              ChooseCategoryTaskPage.routeName
-            );
+            Navigator.of(context).pushNamed(ChooseCategoryTaskPage.routeName);
           },
           splashColor: Colors.lightGreen,
           highlightElevation: 0,
           backgroundColor: Colors.transparent,
           child: const Stack(alignment: Alignment.center, children: [
-            CustomText(
+            CustomTextNoTr(
               '+',
               fontWeight: FontWeight.w700,
               color: Colors.white,

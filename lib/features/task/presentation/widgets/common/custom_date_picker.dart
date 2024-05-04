@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-class CustomDatePicker extends StatefulWidget {
+class CustomDatePicker extends StatefulWidget { // TODO: if today is 14.09.2021 it is showing today 14.09 and 14.10 is showing today 14.10
   const CustomDatePicker({super.key, required this.onDateChanged});
   final Function(DateTime) onDateChanged;
   @override

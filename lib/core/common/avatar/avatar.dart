@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:ui' as ui show Image, Rect, Size, decodeImageFromList;
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
@@ -24,8 +22,6 @@ abstract class AvatarEntity extends Equatable {
       case 'network':
         avatarEntity = NetworkAvatarEntity(
           map!['photoUrl'],
-          crop: Rect.fromLTRB(map['crop']['left'], map['crop']['top'],
-              map['crop']['right'], map['crop']['bottom']),
         );
         break;
       case 'asset':
@@ -39,13 +35,12 @@ abstract class AvatarEntity extends Equatable {
 }
 
 class NetworkAvatarEntity extends AvatarEntity {
-  final Rect crop;
   final Image? image;
-  const NetworkAvatarEntity(String path, {required this.crop, this.image})
-      : super(path, type: AvatarType.network);
+  const NetworkAvatarEntity(super.path, {this.image})
+      : super(type: AvatarType.network);
 
   @override
-  List<Object?> get props => [photoUrl, type, crop, image];
+  List<Object?> get props => [photoUrl, type, image];
 
   NetworkAvatarEntity copyWith(
     String path, {
@@ -54,7 +49,6 @@ class NetworkAvatarEntity extends AvatarEntity {
   }) {
     return NetworkAvatarEntity(
       path,
-      crop: crop ?? this.crop,
       image: image ?? this.image,
     );
   }
@@ -64,28 +58,12 @@ class NetworkAvatarEntity extends AvatarEntity {
     return <String, dynamic>{
       'photoUrl': photoUrl,
       'avatarType': type.name,
-      'crop': {
-        'left': crop.left,
-        'top': crop.top,
-        'right': crop.right,
-        'bottom': crop.bottom,
-      }
     };
-  }
-
-  Future<ui.Image> loadImage() async {
-    final ByteData data =
-        await NetworkAssetBundle(Uri.parse(photoUrl)).load("");
-    final Completer<ui.Image> completer = Completer();
-    ui.decodeImageFromList(data.buffer.asUint8List(), (ui.Image img) {
-      return completer.complete(img);
-    });
-    return completer.future;
   }
 }
 
 class AssetAvatarEntity extends AvatarEntity {
-  const AssetAvatarEntity(String path) : super(path, type: AvatarType.asset);
+  const AssetAvatarEntity(super.path) : super(type: AvatarType.asset);
 
   @override
   Map<String, dynamic> toMap() {
@@ -104,20 +82,4 @@ class NoneAvatarEntity extends AvatarEntity {
       'avatarType': type.name,
     };
   }
-}
-
-extension RectExtensions on ui.Rect {
-  ui.Rect multiply(ui.Size size) => ui.Rect.fromLTRB(
-        left * size.width,
-        top * size.height,
-        right * size.width,
-        bottom * size.height,
-      );
-
-  ui.Rect divide(ui.Size size) => ui.Rect.fromLTRB(
-        left / size.width,
-        top / size.height,
-        right / size.width,
-        bottom / size.height,
-      );
 }

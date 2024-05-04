@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text_no_tr.dart';
+import 'package:flutter_achievments/features/task/presentation/provider/selected_date_provider.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/custom_date_picker.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class DatePickerWidget extends StatefulWidget {
   const DatePickerWidget(
@@ -74,6 +76,8 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
                   setState(() {
                     selectedDate = date;
                   });
+                  Provider.of<SelectedDateProvider>(context, listen: false)
+                      .setSelectedDate(date);
                 },
               ),
             ),

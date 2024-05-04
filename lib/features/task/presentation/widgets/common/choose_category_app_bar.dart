@@ -4,7 +4,6 @@ import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/features/task/presentation/pages/common/create_task_page.dart';
-import 'package:flutter_achievments/features/task/presentation/pages/home/parent_home_page.dart';
 import 'package:flutter_achievments/generated/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,10 +39,7 @@ class ChooseCategoryAppBar extends StatelessWidget {
                     Icons.arrow_back_ios,
                     color: Colors.white,
                   ),
-                  onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                    ParentHomePage.routeName,
-                    (route) => false,
-                  )),
+                  onPressed: () => Navigator.of(context).pop()),
               backgroundColor: Colors.transparent,
               elevation: 0,
               title: CustomText(
@@ -95,7 +91,10 @@ class ChooseCategoryAppBar extends StatelessWidget {
                       _buildTaskTypeWidget(
                         svgPath: '',
                         onTap: () {
-                          Navigator.pushNamed(context, '/sss',);
+                          Navigator.pushNamed(
+                            context,
+                            '/sss',
+                          );
                         },
                         taskType: LocaleKeys.myTemplates,
                       ),

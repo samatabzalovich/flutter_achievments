@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/routes/router.dart';
-import 'package:flutter_achievments/features/app/presentation/provider/app_lifecycle_cache.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/selected_user_provider.dart';
 import 'package:flutter_achievments/features/app/presentation/provider/user_provider.dart';
 import 'package:flutter_achievments/features/task/presentation/provider/chat_bloc_provider.dart';
@@ -22,7 +21,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => SelectedUserProvider()),
-        Provider(create: (_) => LoginLifeCycleCache()),
         Provider(create: (_) => ChatBlocProvider()),
         ChangeNotifierProvider(create: (_) => ChatMessagesProvider()),
         ChangeNotifierProvider(create: (_) => TaskProvider())

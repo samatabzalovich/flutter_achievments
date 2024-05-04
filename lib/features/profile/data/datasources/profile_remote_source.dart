@@ -15,7 +15,7 @@ abstract class ProfileRemoteSource {
   Future<String> createChild({required String email, required String password});
   Future<String> createChildProfile({required ChildModel user});
 }
-
+// TODO: firebase storage craeting avatar.png at the root of the storage
 class ProfileRemoteSourceImpl implements ProfileRemoteSource {
   final FirebaseFirestore _firebaseFirestore;
   final FirebaseStorage _firebaseStorage;

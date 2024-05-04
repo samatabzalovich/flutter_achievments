@@ -1,13 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:crop_image/crop_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
-
-import 'package:flutter_achievments/core/constant/colors.dart';
 import 'package:flutter_achievments/core/common/widgets/blue_green_buttons.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
+import 'package:flutter_achievments/core/common/widgets/loading/loading_screen.dart';
+import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ImageCropBody extends StatefulWidget {
   const ImageCropBody({
@@ -50,40 +53,42 @@ class _ImageCropBodyState extends State<ImageCropBody> {
                     height: 20,
                   ),
                   ConstrainedBox(
-                    constraints:  BoxConstraints(
+                    constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height * 0.5,
                     ),
                     child: CropImage(
                       /// Only needed if you expect to make use of its functionality like setting initial values of
                       /// [aspectRatio] and [defaultCrop].
                       controller: _controller,
+
                       /// The image to be cropped. Use [Image.file] or [Image.network] or any other [Image].
                       image: Image.file(widget.image),
+
                       /// The crop grid color of the outer lines. Defaults to 70% white.
                       gridColor: Colors.transparent,
-                    
+
                       /// The crop grid color of the inner lines. Defaults to [gridColor].
                       gridInnerColor: Colors.transparent,
-                    
+
                       /// The crop grid color of the corner lines. Defaults to [gridColor].
                       gridCornerColor: borderBlueColor,
-                    
+
                       /// The size of the corner of the crop grid. Defaults to 25.
                       gridCornerSize: 50,
-                    
+
                       /// The width of the crop grid thin lines. Defaults to 2.
                       gridThinWidth: 1,
-                    
+
                       /// The width of the crop grid thick lines. Defaults to 5.
                       gridThickWidth: 6,
-                    
+
                       /// The crop grid scrim (outside area overlay) color. Defaults to 54% black.
                       scrimColor: scaffoldBackground.withOpacity(0.7),
-                    
+
                       /// True: Always show third lines of the crop grid.
                       /// False: third lines are only displayed while the user manipulates the grid (default).
                       alwaysShowThirdLines: false,
-                    
+
                       /// The minimum pixel size the crop rectangle can be shrunk to. Defaults to 100.
                       minimumImageSize: 50,
                     ),
@@ -110,14 +115,25 @@ class _ImageCropBodyState extends State<ImageCropBody> {
                   Navigator.of(context).pop();
                 },
                 greenPressed: () async {
-                  final Image image = await _controller.croppedImage();
-                  final Rect rect =  _controller.crop;
-                  
-                  if (mounted) {
-                    final NetworkAvatarEntity avatar = NetworkAvatarEntity(widget.image.path, crop: rect, image: image);
-                    Navigator.of(context).pop(avatar);
+                  LoadingScreen.instance().show(
+                    context: context,
+                    text: '',
+                  );
+                  final imageName = widget.image.path.split('/').last;
+                  final ui.Image image = await _controller.croppedBitmap();
+                  final data =
+                      await image.toByteData(format: ui.ImageByteFormat.png);
+                  final bytes = data!.buffer.asUint8List();
+                  final tempDir = await getTemporaryDirectory();
+                  File file = await File('${tempDir.path}/$imageName').create();
+                  file.writeAsBytesSync(bytes);
+                  LoadingScreen.instance().hide();
+                  if (context.mounted) {
+                    Navigator.of(context).pop(NetworkAvatarEntity(
+                      file.path,
+                      image: Image.file(file)
+                    ));
                   }
-                                  
                 },
                 blueText: 'Назад',
                 greenText: 'Принять')

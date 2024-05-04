@@ -49,6 +49,9 @@ class PermanentTaskModel extends PermanentTaskEntity implements TaskModel {
       'taskCompletionNumber': taskCompletionNumber,
       'description': description,
       'type': type.name,
+      'startTime': null,
+      'repeatOnDays': null,
+      
     };
   }
 
