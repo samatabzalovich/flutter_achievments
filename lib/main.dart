@@ -10,7 +10,6 @@ import 'package:flutter_achievments/features/app/presentation/pages/app.dart';
 import 'package:flutter_achievments/firebase_options.dart';
 import 'package:flutter_achievments/generated/codegen_loader.g.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();

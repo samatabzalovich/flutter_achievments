@@ -8,6 +8,8 @@ import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/core/enums/task_type.dart';
 import 'package:flutter_achievments/core/error/firestore_errors/firestore_errors.dart';
 import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
+import 'package:flutter_achievments/core/services/get_it.dart';
+import 'package:flutter_achievments/core/utils/image_utils.dart';
 import 'package:flutter_achievments/features/task/data/datasources/remote/remote_task_data_source.dart';
 import 'package:flutter_achievments/features/task/data/models/task_models/one_time_task_model.dart';
 import 'package:flutter_achievments/features/task/data/models/task_models/permanent_task_model.dart';
@@ -42,11 +44,12 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
       required String taskId,
       required NetworkAvatarEntity photo}) async {
     try {
-      final downloadUrl = await _getDownloadUrl(
+      final downloadUrl = await sl<ImageUtils>().getDownloadUrl(
         bucketPath: 'tasks/reports/',
         filePath: filePath,
-        taskId: taskId,
+        id: taskId,
         progressSink: progressSink,
+        firebaseStorage: _firebaseStorage,
       );
       await _firestore
           .collection('tasks')
@@ -66,11 +69,12 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
       required String taskId,
       required FrameAvatarEntity taskAvatar}) async {
     try {
-      final downloadUrl = await _getDownloadUrl(
+      final downloadUrl = await sl<ImageUtils>().getDownloadUrl(
         bucketPath: 'tasks/avatars/',
         filePath: filePath,
-        taskId: taskId,
+        id: taskId,
         progressSink: progressSink,
+        firebaseStorage: _firebaseStorage,
       );
       final avatar =
           (taskAvatar.avatar as NetworkAvatarEntity).copyWith(downloadUrl);
@@ -88,56 +92,6 @@ class RemoteTaskDataSourceImpl implements RemoteTaskDataSource {
     }
   }
 
-  Future<String> _getDownloadUrl({
-    required String filePath,
-    required String taskId,
-    required String bucketPath,
-    Sink<double>? progressSink,
-  }) async {
-    try {
-      final file = File(filePath);
-      final fileRef = _firebaseStorage.ref().child('$bucketPath$taskId');
-      final uploadTask = fileRef.putFile(file);
-      // Listen to changes in the upload task
-      final subscription = uploadTask.snapshotEvents.listen(
-        (TaskSnapshot snapshot) {
-          final totalBytes = snapshot.totalBytes == 0 ? 1 : snapshot.totalBytes;
-          double progress = ((snapshot.bytesTransferred / totalBytes) * 100);
-          progressSink!.add(progress);
-        },
-        onError: (e) {
-          progressSink!.add(0);
-          progressSink.close();
-          throw const StorageErrorUnknown();
-        },
-      );
-      String? downloadUrl;
-      // Handle completion
-      await uploadTask.whenComplete(() async {
-        try {
-          if (uploadTask.snapshot.state == TaskState.success) {
-            downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
-            // Emit completion state with download URL
-            progressSink!.add(100);
-          } else {
-            // Emit error if upload didn't succeed
-            progressSink!.add(0);
-          }
-        } catch (e) {
-          // Emit error
-          progressSink!.add(0);
-          throw const StorageErrorUnknown();
-        } finally {
-          // Always close the controller
-          progressSink!.close();
-          subscription.cancel();
-        }
-      });
-      return downloadUrl!;
-    } catch (e) {
-      rethrow;
-    }
-  }
 
   @override
   Future<void> completeTask(String id) async {

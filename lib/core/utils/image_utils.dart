@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/common/pages/crop_image_page.dart';
 import 'package:flutter_achievments/core/common/widgets/custom_text.dart';
 import 'package:flutter_achievments/core/constant/colors.dart';
+import 'package:flutter_achievments/core/error/storage_errors/storage_error.dart';
 import 'package:flutter_achievments/core/routes/custom_page_builder.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -100,5 +102,58 @@ class ImageUtils {
     }
 
     return video;
+  }
+
+  
+  Future<String> getDownloadUrl({
+    required String filePath,
+    required String id,
+    required String bucketPath,
+    required Sink<double>? progressSink,
+    required FirebaseStorage firebaseStorage,
+  }) async {
+    try {
+      final file = File(filePath);
+      final fileRef = firebaseStorage.ref().child('$bucketPath$id');
+      final uploadTask = fileRef.putFile(file);
+      // Listen to changes in the upload task
+      final subscription = uploadTask.snapshotEvents.listen(
+        (TaskSnapshot snapshot) {
+          final totalBytes = snapshot.totalBytes == 0 ? 1 : snapshot.totalBytes;
+          double progress = ((snapshot.bytesTransferred / totalBytes) * 100);
+          progressSink!.add(progress);
+        },
+        onError: (e) {
+          progressSink!.add(0);
+          progressSink.close();
+          throw const StorageErrorUnknown();
+        },
+      );
+      String? downloadUrl;
+      // Handle completion
+      await uploadTask.whenComplete(() async {
+        try {
+          if (uploadTask.snapshot.state == TaskState.success) {
+            downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
+            // Emit completion state with download URL
+            progressSink!.add(100);
+          } else {
+            // Emit error if upload didn't succeed
+            progressSink!.add(0);
+          }
+        } catch (e) {
+          // Emit error
+          progressSink!.add(0);
+          throw const StorageErrorUnknown();
+        } finally {
+          // Always close the controller
+          progressSink!.close();
+          subscription.cancel();
+        }
+      });
+      return downloadUrl!;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

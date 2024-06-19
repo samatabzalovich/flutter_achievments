@@ -3,16 +3,11 @@ import 'package:flutter_achievments/features/task/domain/entities/shared/categor
 
 class CategoryModel extends CategoryEntity {
   const CategoryModel({
-    required String id,
-    required String categoryName,
-    required String? categoryDescription,
-    required AvatarEntity categoryImage,
-  }) : super(
-          id: id,
-          categoryName: categoryName,
-          categoryDescription: categoryDescription,
-          categoryImage: categoryImage,
-        );
+    required super.id,
+    required super.categoryName,
+    required super.categoryDescription,
+    required super.categoryImage,
+  });
 
   factory CategoryModel.fromMap(Map<String, dynamic> json) {
     return CategoryModel(
@@ -24,12 +19,8 @@ class CategoryModel extends CategoryEntity {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'categoryName': categoryName
-    };
+    return {'id': id, 'categoryName': categoryName};
   }
-
 
   static CategoryModel fromEntity(CategoryEntity entity) {
     return CategoryModel(
