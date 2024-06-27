@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_achievments/features/reward/presentation/widgets/reward_sheet_body.dart';
 import 'package:flutter_achievments/features/task/presentation/provider/page_index.dart';
 import 'package:flutter_achievments/features/task/presentation/widgets/common/home_sheet_body.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,12 @@ class TabBottomSheetWidgets extends StatelessWidget {
             maxChildSize: maxChildSize,
           );
         case 1:
-          return Container();
+          return RewardSheetBody(
+            controller: scrollController,
+            draggableScrollableController: controller,
+            minChildSize: minChildSize,
+            maxChildSize: maxChildSize,
+          );
         case 2:
           return Container();
         default:

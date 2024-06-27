@@ -18,7 +18,7 @@ class CustomImageFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomHexagon(
-      size: size ?? 110.h,
+      size: size ?? 116.h,
       backgroundColor: tileAvatar.backgroundColor,
       child: RepaintBoundary(
         child: CustomHexagon(

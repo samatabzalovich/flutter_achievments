@@ -1,7 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:equatable/equatable.dart';
-
+import 'package:flutter/material.dart' show Color;
+import 'package:flutter_achievments/core/common/avatar/avatar.dart';
 import 'package:flutter_achievments/core/common/avatar/frame_avatar.dart';
 import 'package:flutter_achievments/core/enums/reward_type.dart';
 import 'package:flutter_achievments/features/task/domain/entities/shared/category_entity.dart';
@@ -92,6 +93,28 @@ class RewardEntity extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       parentId: parentId ?? this.parentId,
       updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  static RewardEntity mock() {
+    return RewardEntity(
+      id: '1',
+      name: 'Reward',
+      description: 'Reward description',
+      cost: 10,
+      avatar: const FrameAvatarEntity(
+          avatar: NoneAvatarEntity(),
+          backgroundColor: Color.fromARGB(255, 161, 206, 122)),
+      category: CategoryEntity.defaultRewardCategories()[0],
+      isInfinite: false,
+      available: 10,
+      isCommonReward: false,
+      receivers: const [],
+      type: RewardType.available,
+      createdBy: '1',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      parentId: '1',
+      updatedAt: DateTime.now(),
     );
   }
 }
